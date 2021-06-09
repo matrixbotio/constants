@@ -1,0 +1,115 @@
+BASE:
+  INTERNAL_ERROR:
+    - -32603
+    - An internal error occured. Please, try doing this request a few times more or just leave it as is and continue it later
+  INVALID_ARGS:
+    - -32602
+    - Invalid params
+  METHOD_NOT_FOUND:
+    - -32601
+    - Method not found
+  METHOD_OVERLOAD_NOT_FOUND:
+    - -32602
+    - Cannot find suitable method overload. Please, check the args you've passed
+
+BALANCE:
+  NOT_ENOUGH:
+    - -33010
+    - Not enough balance
+
+BOT:
+  INACTIVE: 
+    - -34300
+    - Bot is inactive
+  IS_ACTIVE: 
+    - -34200
+    - Bot is active
+  NOT_FOUND: 
+    - -34100
+    - Bot not found
+  ORDER_INVALID: 
+    - -34020
+    - Invalid order
+
+DATA:
+  EMPTY: 
+    - -35200
+    - Data empty
+  EXISTS: 
+    - -35030
+    - Data exists
+  HANDLE_ERR: 
+    - -35001
+    - Data handle error
+  INVALID: 
+    - -35100
+    - Invalid data
+  NOT_FOUND: 
+    - -35010
+    - Data not found
+  NO_ACCESS: 
+    - -35040
+    - Data no acesss
+  REQ_ERR: 
+    - -35020
+    - Data request error
+  UNKNOWN: 
+    - -35300
+    - Data unknown
+
+USER:
+  CRED_INVALID: 
+    - -36300
+    - User credentials invalid
+  DELETED: 
+    - -36001
+    - User deleted
+  EMAIL_ACTIVATION_CODE_WRONG: 
+    - -36304
+    - Can't find such e-mail activaton code
+  EMAIL_INVALID: 
+    - -36301
+    - Email is invalid. Please, check its format
+  EMAIL_NOT_IN_WHITELIST: 
+    - -36303
+    - Now we're at testing stage and your email isn't in whitelist. We can't allow you to register. Sorry
+  EMAIL_RECOVERY_CODE_WRONG: 
+    - -36305
+    - Can't find such e-mail recovery code
+  EMAIL_USED: 
+    - -36302
+    - This email is already used
+  IS_AUTH: 
+    - -36100
+    - User is authorized
+  NOT_AUTH: 
+    - -36200
+    - User not authorized
+  NOT_FOUND: 
+    - -36010
+    - User not found
+  STATUS_INVALID: 
+    - -36020
+    - User status invalid
+
+SERVICE:
+  DISCONNECTED: 
+    - -37100
+    - Service disconnected
+  NO_ACCESS: 
+    - -37010
+    - No access
+  REQ_FAILED: 
+    - -37010
+    - Service request failed
+
+NOTIFICATIONS:
+  CONFIG_ERROR: 
+    - -38010
+    - Error configuring notifications
+  SAVE_EMAIL_ERROR: 
+    - -38020
+    - Error saving email for notifications
+  TELEGRAM_AUTH_ERROR: 
+    - -38000
+    - Telegram user authentication error

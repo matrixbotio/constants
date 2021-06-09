@@ -9,5 +9,5 @@ export default struct => {
         }
         res += '\n';
     }
-    return res.slice(0, -3) + ';';
+    return res.slice(0, -3) + ';\n';
 } 

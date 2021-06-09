@@ -5,7 +5,7 @@ export default struct => {
     for(const section in struct){
         for(const name in struct[section]){
             const current = struct[section][name];
-            res += `    ${section}_${name} = _(${current[0]}, ${JSON.stringify(current[1])}),\n`;
+            res += `    ${section}_${name} = _(${current[0]}, ${JSON.stringify(`${section}_${name}`)}, ${JSON.stringify(current[1])}),\n`;
         }
         res += '\n';
     }

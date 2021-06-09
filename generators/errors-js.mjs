@@ -8,7 +8,7 @@ const head = `
  * @arg {M} message
  */
 function _(code, name, message){
-    return Object.assign(new Error, { code, message, data: { name } })
+    return Object.assign(new Error, { code, message, name })
 }
 
 export const

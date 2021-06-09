@@ -1,4 +1,18 @@
-const head = "import _ from '@/components/json-rpc-error.js';\n\nexport const\n";
+const head = `
+/**
+ * @template {number} C
+ * @template {string} N
+ * @template {string} M
+ * @arg {C} code
+ * @arg {N} name
+ * @arg {M} message
+ */
+function _(code, name, message){
+    return Object.assign(new Error, { code, message, data: { name } })
+}
+
+export const
+`.slice(1);
 
 export default struct => {
     let res = head;

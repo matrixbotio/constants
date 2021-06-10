@@ -29,8 +29,8 @@ jobs:
       - name: Generate files with constants
         uses: matrixbotio/constants@generator-action
         with:
-          config-path: "$GITHUB_WORKSPACE/config"
-          dest-path: "$GITHUB_WORKSPACE/master"
+          config-path: config
+          dest-path: master
 
       - name: Push generated
         run: |

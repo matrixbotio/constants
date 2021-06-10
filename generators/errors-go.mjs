@@ -1,14 +1,14 @@
 const head = `
 package sharederrs
 
-type APIError struct {
+type apiError struct {
 	Message string        \`json:"message"\`
 	Code    int           \`json:"code"\`
 	Name    string        \`json:"name"\`
 }
 
-func err(code int, name string, msg string) *APIError {
-	return &APIError{
+func err(code int, name string, msg string) *apiError {
+	return &apiError{
 		Message: msg,
 		Code:    code,
 		Name:    name,

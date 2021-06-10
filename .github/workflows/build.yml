@@ -37,6 +37,9 @@ jobs:
           cd "$GITHUB_WORKSPACE"/config
           export SHA=$(git rev-parse --short HEAD)
           cd "$GITHUB_WORKSPACE"/master
+          mv .git ..
+          rm -rf ./*
+          mv ../.git .
           git config --global user.email "82820230+MatrixDevBot@users.noreply.github.com"
           git config --global user.name "Matrix Dev [BOT]"
           git add .

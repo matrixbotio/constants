@@ -37,10 +37,9 @@ jobs:
           cd "$GITHUB_WORKSPACE"/config
           export SHA=$(git rev-parse --short HEAD)
           cd "$GITHUB_WORKSPACE"/master
-          if [ $(git diff --name-status | wc -l) -ne 0 ]; then
-            git config --global user.email "82820230+MatrixDevBot@users.noreply.github.com"
-            git config --global user.name "Matrix Dev [BOT]"
-            git add .
-            git commit -m "Update constants ($SHA)"
-            git push origin master
-          fi
+          git config --global user.email "82820230+MatrixDevBot@users.noreply.github.com"
+          git config --global user.name "Matrix Dev [BOT]"
+          git add .
+          git commit -m "Update constants ($SHA)" && \
+          git push origin master || \
+          echo Changes not found

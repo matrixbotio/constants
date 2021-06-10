@@ -18,7 +18,7 @@ const pkgjson = JSON.stringify({
     name: '@/constants/errors',
     version: '0.0.0',
     module: 'index.js',
-    types: 'index.js',
+    types: 'index.ts',
 }, null, '    ') + '\n';
 
 export default struct => {
@@ -33,6 +33,7 @@ export default struct => {
     const src = res.slice(0, -3) + ';\n';
     return {
         'index.js': src,
+        'index.ts': src,
         'package.json': pkgjson,
     };
 }

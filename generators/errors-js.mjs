@@ -14,15 +14,23 @@ function _(code, name, message){
 export const
 `.slice(1);
 
+const tsHead = `
+function _<C extends number, N extends string, M extends string>(code: C, name: N, message: M){
+    return Object.assign(new Error, { code, message, name })
+}
+
+export const
+`.slice(1);
+
 const pkgjson = JSON.stringify({
     name: '@/constants/errors',
     version: '0.0.0',
     module: 'index.js',
-    types: 'index.ts',
+    types: 'index.d.ts',
 }, null, '    ') + '\n';
 
 export default struct => {
-    let res = head;
+    let res = '';
     for(const section in struct){
         for(const name in struct[section]){
             const current = struct[section][name];
@@ -30,10 +38,10 @@ export default struct => {
         }
         res += '\n';
     }
-    const src = res.slice(0, -3) + ';\n';
     return {
-        'index.js': src,
-        'index.ts': src,
+        'index.js': head + res.slice(0, -3) + ';\n',
+        'errors.ts': tsHead + res.slice(0, -3) + ';\n',
+        'index.d.ts': 'export * from "./errors";\n',
         'package.json': pkgjson,
     };
 }

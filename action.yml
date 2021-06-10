@@ -6,6 +6,10 @@ inputs:
     description: Path to config files
     required: true
     default: '.'
+  dest-path:
+    description: Destination to write result files to
+    required: true
+    default: '.'
 
 runs:
   using: node12

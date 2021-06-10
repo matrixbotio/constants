@@ -8,8 +8,8 @@ const yamlFile = resolve(process.env.INPUT_CONFIG_PATH, 'errors.yml');
 const yaml = readFile(yamlFile, 'utf8').then(YAML.parse);
 
 // destinations
-const jsFile = resolve(process.cwd(), 'errors.js');
-const goFile = resolve(process.cwd(), 'errors.go');
+const jsFile = resolve(process.env.INPUT_DEST_PATH, 'errors.js');
+const goFile = resolve(process.env.INPUT_DEST_PATH, 'errors.go');
 
 export default async () => {
     const structure = await yaml;

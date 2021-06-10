@@ -43,5 +43,7 @@ export default struct => {
         }
         res += '\n';
     }
-    return res.slice(0, -1);
+    return {
+        'main.go': res.slice(0, -1),
+    };
 }

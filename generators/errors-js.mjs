@@ -14,6 +14,13 @@ function _(code, name, message){
 export const
 `.slice(1);
 
+const pkgjson = JSON.stringify({
+    name: '@/constants/errors',
+    version: '0.0.0',
+    module: 'index.js',
+    types: 'index.js',
+}, null, '    ') + '\n';
+
 export default struct => {
     let res = head;
     for(const section in struct){
@@ -23,5 +30,9 @@ export default struct => {
         }
         res += '\n';
     }
-    return res.slice(0, -3) + ';\n';
-} 
+    const src = res.slice(0, -3) + ';\n';
+    return {
+        'index.js': src,
+        'package.json': pkgjson,
+    };
+}

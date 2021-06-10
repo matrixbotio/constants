@@ -26,6 +26,13 @@ jobs:
           ref: config
           token: ${{ secrets.GH_CI_TOKEN }}
 
+      - name: Clear existent generated artifacts
+        run: |
+          cd "$GITHUB_WORKSPACE"/master
+          mv .git ..
+          rm -rf ./*
+          mv ../.git .
+
       - name: Generate files with constants
         uses: matrixbotio/constants@generator-action
         with:
@@ -37,9 +44,6 @@ jobs:
           cd "$GITHUB_WORKSPACE"/config
           export SHA=$(git rev-parse --short HEAD)
           cd "$GITHUB_WORKSPACE"/master
-          mv .git ..
-          rm -rf ./*
-          mv ../.git .
           git config --global user.email "82820230+MatrixDevBot@users.noreply.github.com"
           git config --global user.name "Matrix Dev [BOT]"
           git add .

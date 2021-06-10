@@ -1,0 +1,12 @@
+name: Generator action
+description: Automatically generates files with constants for JS and Golang
+
+inputs:
+  config-path:
+    description: Path to config files
+    required: true
+    default: '.'
+
+runs:
+  using: node12
+  main: index.mjs

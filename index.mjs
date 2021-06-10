@@ -1,4 +1,4 @@
-import errors from './errors.mjs';
+import errors from './processes/errors.mjs';
 
 async function main(){
     await Promise.all([

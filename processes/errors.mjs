@@ -6,12 +6,16 @@ import go from '../generators/errors-go.mjs';
 
 const { readFile, writeFile } = promises;
 
-const yamlFile = resolve(process.env.INPUT_CONFIG_PATH, 'errors.yml');
+const configPath = process.env['INPUT_CONFIG-PATH'],
+    destPath = process.env['INPUT_DEST-PATH'],
+    ghWorkspace = process.env.GITHUB_WORKSPACE;
+
+const yamlFile = resolve(ghWorkspace, configPath, 'errors.yml');
 const yaml = readFile(yamlFile, 'utf8').then(YAML.parse);
 
 // destinations
-const jsFile = resolve(process.env.INPUT_DEST_PATH, 'errors.js');
-const goFile = resolve(process.env.INPUT_DEST_PATH, 'errors.go');
+const jsFile = resolve(ghWorkspace, destPath, 'errors.js');
+const goFile = resolve(ghWorkspace, destPath, 'errors.go');
 
 export default async () => {
     const structure = await yaml;

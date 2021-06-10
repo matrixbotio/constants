@@ -39,8 +39,8 @@ export default struct => {
         res += '\n';
     }
     return {
-        'index.mjs': 'export * from "https://raw.githubusercontent.com/matrixbotio/constants/master/errors/index.js";\n',
-        'index.js': head + res.slice(0, -3) + ';\n',
+        'index.mjs': 'export * from "https://raw.githubusercontent.com/matrixbotio/constants/master/errors/errors.js";\n',
+        'errors.js': head + res.slice(0, -3) + ';\n',
         'errors.ts': tsHead + res.slice(0, -3) + ';\n',
         'index.d.ts': 'export * from "./errors";\n',
         'package.json': pkgjson,

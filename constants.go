@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 )
 
-type apiError struct {
+type APIError struct {
 	Message string        `json:"message"`
 	Code    int           `json:"code"`
 	Name    string        `json:"name"`
@@ -25,14 +25,14 @@ func get(url string) string {
 	return string(body)
 }
 
-func getErrors(url string) map[string]*apiError {
-	var storage map[string]*apiError
+func getErrors(url string) map[string]*APIError {
+	var storage map[string]*APIError
 	json.Unmarshal([]byte(get(url)), &storage)
 	return storage
 }
 
-func err(code int, name string, msg string) *apiError {
-	return &apiError{
+func err(code int, name string, msg string) *APIError {
+	return &APIError{
 		Message: msg,
 		Code:    code,
 		Name:    name,
@@ -41,7 +41,7 @@ func err(code int, name string, msg string) *apiError {
 
 var errors = getErrors("https://raw.githubusercontent.com/matrixbotio/constants/master/errors/errors.json")
 
-func Error(name string) *apiError {
+func Error(name string) *APIError {
 	res, exists := errors["foo"]
 	if !exists {
 		return err(-1, "ERR_UNKNOWN", "Cannot get error named " + name)

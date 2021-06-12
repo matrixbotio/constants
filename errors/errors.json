@@ -1,138 +1,172 @@
 {
-	"BASE_INTERNAL_ERROR": [
-		-32603,
-		"An internal error occured. Please, try doing this request a few times more or just leave it as is and continue it later"
-	],
-	"BASE_INVALID_ARGS": [
-		-32602,
-		"Invalid params"
-	],
-	"BASE_METHOD_NOT_FOUND": [
-		-32601,
-		"Method not found"
-	],
-	"BASE_METHOD_OVERLOAD_NOT_FOUND": [
-		-32602,
-		"Cannot find suitable method overload. Please, check the args you've passed"
-	],
-	"BALANCE_NOT_ENOUGH": [
-		-33010,
-		"Not enough balance"
-	],
-	"BOT_INACTIVE": [
-		-34300,
-		"Bot is inactive"
-	],
-	"BOT_IS_ACTIVE": [
-		-34200,
-		"Bot is active"
-	],
-	"BOT_NOT_FOUND": [
-		-34100,
-		"Bot not found"
-	],
-	"BOT_ORDER_INVALID": [
-		-34020,
-		"Invalid order"
-	],
-	"DATA_EMPTY": [
-		-35200,
-		"Data empty"
-	],
-	"DATA_EXISTS": [
-		-35030,
-		"Data exists"
-	],
-	"DATA_HANDLE_ERR": [
-		-35001,
-		"Data handle error"
-	],
-	"DATA_INVALID": [
-		-35100,
-		"Invalid data"
-	],
-	"DATA_NOT_FOUND": [
-		-35010,
-		"Data not found"
-	],
-	"DATA_NO_ACCESS": [
-		-35040,
-		"Data no acesss"
-	],
-	"DATA_REQ_ERR": [
-		-35020,
-		"Data request error"
-	],
-	"DATA_UNKNOWN": [
-		-35300,
-		"Data unknown"
-	],
-	"USER_CRED_INVALID": [
-		-36300,
-		"User credentials invalid"
-	],
-	"USER_DELETED": [
-		-36001,
-		"User deleted"
-	],
-	"USER_EMAIL_ACTIVATION_CODE_WRONG": [
-		-36304,
-		"Can't find such e-mail activaton code"
-	],
-	"USER_EMAIL_INVALID": [
-		-36301,
-		"Email is invalid. Please, check its format"
-	],
-	"USER_EMAIL_NOT_IN_WHITELIST": [
-		-36303,
-		"Now we're at testing stage and your email isn't in whitelist. We can't allow you to register. Sorry"
-	],
-	"USER_EMAIL_RECOVERY_CODE_WRONG": [
-		-36305,
-		"Can't find such e-mail recovery code"
-	],
-	"USER_EMAIL_USED": [
-		-36302,
-		"This email is already used"
-	],
-	"USER_IS_AUTH": [
-		-36100,
-		"User is authorized"
-	],
-	"USER_NOT_AUTH": [
-		-36200,
-		"User not authorized"
-	],
-	"USER_NOT_FOUND": [
-		-36010,
-		"User not found"
-	],
-	"USER_STATUS_INVALID": [
-		-36020,
-		"User status invalid"
-	],
-	"SERVICE_DISCONNECTED": [
-		-37100,
-		"Service disconnected"
-	],
-	"SERVICE_NO_ACCESS": [
-		-37010,
-		"No access"
-	],
-	"SERVICE_REQ_FAILED": [
-		-37010,
-		"Service request failed"
-	],
-	"NOTIFICATIONS_CONFIG_ERROR": [
-		-38010,
-		"Error configuring notifications"
-	],
-	"NOTIFICATIONS_SAVE_EMAIL_ERROR": [
-		-38020,
-		"Error saving email for notifications"
-	],
-	"NOTIFICATIONS_TELEGRAM_AUTH_ERROR": [
-		-38000,
-		"Telegram user authentication error"
-	]
+	"BASE_INTERNAL_ERROR": {
+		"code": -32603,
+		"message": "An internal error occured. Please, try doing this request a few times more or just leave it as is and continue it later",
+		"name": "BASE_INTERNAL_ERROR"
+	},
+	"BASE_INVALID_ARGS": {
+		"code": -32602,
+		"message": "Invalid params",
+		"name": "BASE_INVALID_ARGS"
+	},
+	"BASE_METHOD_NOT_FOUND": {
+		"code": -32601,
+		"message": "Method not found",
+		"name": "BASE_METHOD_NOT_FOUND"
+	},
+	"BASE_METHOD_OVERLOAD_NOT_FOUND": {
+		"code": -32602,
+		"message": "Cannot find suitable method overload. Please, check the args you've passed",
+		"name": "BASE_METHOD_OVERLOAD_NOT_FOUND"
+	},
+	"BALANCE_NOT_ENOUGH": {
+		"code": -33010,
+		"message": "Not enough balance",
+		"name": "BALANCE_NOT_ENOUGH"
+	},
+	"BOT_INACTIVE": {
+		"code": -34300,
+		"message": "Bot is inactive",
+		"name": "BOT_INACTIVE"
+	},
+	"BOT_IS_ACTIVE": {
+		"code": -34200,
+		"message": "Bot is active",
+		"name": "BOT_IS_ACTIVE"
+	},
+	"BOT_NOT_FOUND": {
+		"code": -34100,
+		"message": "Bot not found",
+		"name": "BOT_NOT_FOUND"
+	},
+	"BOT_ORDER_INVALID": {
+		"code": -34020,
+		"message": "Invalid order",
+		"name": "BOT_ORDER_INVALID"
+	},
+	"DATA_EMPTY": {
+		"code": -35200,
+		"message": "Data empty",
+		"name": "DATA_EMPTY"
+	},
+	"DATA_EXISTS": {
+		"code": -35030,
+		"message": "Data exists",
+		"name": "DATA_EXISTS"
+	},
+	"DATA_HANDLE_ERR": {
+		"code": -35001,
+		"message": "Data handle error",
+		"name": "DATA_HANDLE_ERR"
+	},
+	"DATA_INVALID": {
+		"code": -35100,
+		"message": "Invalid data",
+		"name": "DATA_INVALID"
+	},
+	"DATA_NOT_FOUND": {
+		"code": -35010,
+		"message": "Data not found",
+		"name": "DATA_NOT_FOUND"
+	},
+	"DATA_NO_ACCESS": {
+		"code": -35040,
+		"message": "Data no acesss",
+		"name": "DATA_NO_ACCESS"
+	},
+	"DATA_REQ_ERR": {
+		"code": -35020,
+		"message": "Data request error",
+		"name": "DATA_REQ_ERR"
+	},
+	"DATA_UNKNOWN": {
+		"code": -35300,
+		"message": "Data unknown",
+		"name": "DATA_UNKNOWN"
+	},
+	"USER_CRED_INVALID": {
+		"code": -36300,
+		"message": "User credentials invalid",
+		"name": "USER_CRED_INVALID"
+	},
+	"USER_DELETED": {
+		"code": -36001,
+		"message": "User deleted",
+		"name": "USER_DELETED"
+	},
+	"USER_EMAIL_ACTIVATION_CODE_WRONG": {
+		"code": -36304,
+		"message": "Can't find such e-mail activaton code",
+		"name": "USER_EMAIL_ACTIVATION_CODE_WRONG"
+	},
+	"USER_EMAIL_INVALID": {
+		"code": -36301,
+		"message": "Email is invalid. Please, check its format",
+		"name": "USER_EMAIL_INVALID"
+	},
+	"USER_EMAIL_NOT_IN_WHITELIST": {
+		"code": -36303,
+		"message": "Now we're at testing stage and your email isn't in whitelist. We can't allow you to register. Sorry",
+		"name": "USER_EMAIL_NOT_IN_WHITELIST"
+	},
+	"USER_EMAIL_RECOVERY_CODE_WRONG": {
+		"code": -36305,
+		"message": "Can't find such e-mail recovery code",
+		"name": "USER_EMAIL_RECOVERY_CODE_WRONG"
+	},
+	"USER_EMAIL_USED": {
+		"code": -36302,
+		"message": "This email is already used",
+		"name": "USER_EMAIL_USED"
+	},
+	"USER_IS_AUTH": {
+		"code": -36100,
+		"message": "User is authorized",
+		"name": "USER_IS_AUTH"
+	},
+	"USER_NOT_AUTH": {
+		"code": -36200,
+		"message": "User not authorized",
+		"name": "USER_NOT_AUTH"
+	},
+	"USER_NOT_FOUND": {
+		"code": -36010,
+		"message": "User not found",
+		"name": "USER_NOT_FOUND"
+	},
+	"USER_STATUS_INVALID": {
+		"code": -36020,
+		"message": "User status invalid",
+		"name": "USER_STATUS_INVALID"
+	},
+	"SERVICE_DISCONNECTED": {
+		"code": -37100,
+		"message": "Service disconnected",
+		"name": "SERVICE_DISCONNECTED"
+	},
+	"SERVICE_NO_ACCESS": {
+		"code": -37010,
+		"message": "No access",
+		"name": "SERVICE_NO_ACCESS"
+	},
+	"SERVICE_REQ_FAILED": {
+		"code": -37010,
+		"message": "Service request failed",
+		"name": "SERVICE_REQ_FAILED"
+	},
+	"NOTIFICATIONS_CONFIG_ERROR": {
+		"code": -38010,
+		"message": "Error configuring notifications",
+		"name": "NOTIFICATIONS_CONFIG_ERROR"
+	},
+	"NOTIFICATIONS_SAVE_EMAIL_ERROR": {
+		"code": -38020,
+		"message": "Error saving email for notifications",
+		"name": "NOTIFICATIONS_SAVE_EMAIL_ERROR"
+	},
+	"NOTIFICATIONS_TELEGRAM_AUTH_ERROR": {
+		"code": -38000,
+		"message": "Telegram user authentication error",
+		"name": "NOTIFICATIONS_TELEGRAM_AUTH_ERROR"
+	}
 }

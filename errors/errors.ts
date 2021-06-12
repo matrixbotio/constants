@@ -1,5 +1,5 @@
 function _<C extends number, N extends string, M extends string>(code: C, name: N, message: M){
-    return Object.assign(new Error, { code, message, name })
+	return Object.assign(new Error, { code, message, name })
 }
 
 export const

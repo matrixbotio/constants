@@ -1,0 +1,138 @@
+{
+	"BASE_INTERNAL_ERROR": [
+		-32603,
+		"An internal error occured. Please, try doing this request a few times more or just leave it as is and continue it later"
+	],
+	"BASE_INVALID_ARGS": [
+		-32602,
+		"Invalid params"
+	],
+	"BASE_METHOD_NOT_FOUND": [
+		-32601,
+		"Method not found"
+	],
+	"BASE_METHOD_OVERLOAD_NOT_FOUND": [
+		-32602,
+		"Cannot find suitable method overload. Please, check the args you've passed"
+	],
+	"BALANCE_NOT_ENOUGH": [
+		-33010,
+		"Not enough balance"
+	],
+	"BOT_INACTIVE": [
+		-34300,
+		"Bot is inactive"
+	],
+	"BOT_IS_ACTIVE": [
+		-34200,
+		"Bot is active"
+	],
+	"BOT_NOT_FOUND": [
+		-34100,
+		"Bot not found"
+	],
+	"BOT_ORDER_INVALID": [
+		-34020,
+		"Invalid order"
+	],
+	"DATA_EMPTY": [
+		-35200,
+		"Data empty"
+	],
+	"DATA_EXISTS": [
+		-35030,
+		"Data exists"
+	],
+	"DATA_HANDLE_ERR": [
+		-35001,
+		"Data handle error"
+	],
+	"DATA_INVALID": [
+		-35100,
+		"Invalid data"
+	],
+	"DATA_NOT_FOUND": [
+		-35010,
+		"Data not found"
+	],
+	"DATA_NO_ACCESS": [
+		-35040,
+		"Data no acesss"
+	],
+	"DATA_REQ_ERR": [
+		-35020,
+		"Data request error"
+	],
+	"DATA_UNKNOWN": [
+		-35300,
+		"Data unknown"
+	],
+	"USER_CRED_INVALID": [
+		-36300,
+		"User credentials invalid"
+	],
+	"USER_DELETED": [
+		-36001,
+		"User deleted"
+	],
+	"USER_EMAIL_ACTIVATION_CODE_WRONG": [
+		-36304,
+		"Can't find such e-mail activaton code"
+	],
+	"USER_EMAIL_INVALID": [
+		-36301,
+		"Email is invalid. Please, check its format"
+	],
+	"USER_EMAIL_NOT_IN_WHITELIST": [
+		-36303,
+		"Now we're at testing stage and your email isn't in whitelist. We can't allow you to register. Sorry"
+	],
+	"USER_EMAIL_RECOVERY_CODE_WRONG": [
+		-36305,
+		"Can't find such e-mail recovery code"
+	],
+	"USER_EMAIL_USED": [
+		-36302,
+		"This email is already used"
+	],
+	"USER_IS_AUTH": [
+		-36100,
+		"User is authorized"
+	],
+	"USER_NOT_AUTH": [
+		-36200,
+		"User not authorized"
+	],
+	"USER_NOT_FOUND": [
+		-36010,
+		"User not found"
+	],
+	"USER_STATUS_INVALID": [
+		-36020,
+		"User status invalid"
+	],
+	"SERVICE_DISCONNECTED": [
+		-37100,
+		"Service disconnected"
+	],
+	"SERVICE_NO_ACCESS": [
+		-37010,
+		"No access"
+	],
+	"SERVICE_REQ_FAILED": [
+		-37010,
+		"Service request failed"
+	],
+	"NOTIFICATIONS_CONFIG_ERROR": [
+		-38010,
+		"Error configuring notifications"
+	],
+	"NOTIFICATIONS_SAVE_EMAIL_ERROR": [
+		-38020,
+		"Error saving email for notifications"
+	],
+	"NOTIFICATIONS_TELEGRAM_AUTH_ERROR": [
+		-38000,
+		"Telegram user authentication error"
+	]
+}

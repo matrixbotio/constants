@@ -1,8 +1,8 @@
 package constants
 
 import (
-    "io/ioutil"
-    "net/http"
+	"io/ioutil"
+	"net/http"
 	"encoding/json"
 )
 
@@ -14,14 +14,14 @@ type apiError struct {
 
 func get(url string) string {
 	resp, err := http.Get(url)
-    if err != nil {
-        return "{}"
-    }
-    defer resp.Body.Close()
-    body, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        return "{}"
-    }
+	if err != nil {
+		return "{}"
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "{}"
+	}
 	return string(body)
 }
 

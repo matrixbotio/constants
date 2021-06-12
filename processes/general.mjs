@@ -8,13 +8,13 @@ const dest = resolve(process.env.GITHUB_WORKSPACE, process.env['INPUT_DEST-PATH'
 const staticDir = resolve(fileURLToPath(import.meta.url), '../../static');
 
 function getStaticFile(fname){
-    return readFile(resolve(staticDir, fname), 'utf8');
+	return readFile(resolve(staticDir, fname), 'utf8');
 }
 
 export default async () => {
-    const targetFiles = {
-        'constants.go': getStaticFile('constants.go'),
-        'go.mod': getStaticFile('go.mod'),
-    };
-    await Promise.all(Object.keys(targetFiles).map(async file => writeFile(resolve(dest, file), await targetFiles[file])));
+	const targetFiles = {
+		'constants.go': getStaticFile('constants.go'),
+		'go.mod': getStaticFile('go.mod'),
+	};
+	await Promise.all(Object.keys(targetFiles).map(async file => writeFile(resolve(dest, file), await targetFiles[file])));
 }

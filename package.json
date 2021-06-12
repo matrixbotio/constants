@@ -1,6 +1,6 @@
 {
-    "dependencies": {
-        "esm": "^3.2.25",
-        "yaml": "^2.0.0-5"
-    }
+	"dependencies": {
+		"esm": "^3.2.25",
+		"yaml": "^2.0.0-5"
+	}
 }

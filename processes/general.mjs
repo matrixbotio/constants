@@ -14,6 +14,7 @@ function getStaticFile(fname){
 export default async () => {
     const targetFiles = {
         'constants.go': getStaticFile('constants.go'),
+        'go.mod': getStaticFile('go.mod'),
     };
     await Promise.all(Object.keys(targetFiles).map(async file => writeFile(resolve(dest, file), await targetFiles[file])));
 }

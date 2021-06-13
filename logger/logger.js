@@ -32,14 +32,13 @@ function getMessageAndStack(data){
 	else return getMessageAndStack('' + data);
 }
 
-function padLines(text, length){
-	const prefix = ''.padStart(length, ' ');
-	return text.split(nl).map(line => (prefix + line)).join(nl);
+function padLines(text){
+	return text.split(nl).map(line => ('    ' + line.trimLeft())).join(nl);
 }
 
-function applyFormat(format, datetime, message, stackPadLen){
+function applyFormat(format, datetime, message){
 	message = getMessageAndStack(message);
-	message = message.stack ? message.message + nl + padLines(message.stack, stackPadLen) : message.message;
+	message = message.stack ? message.message + nl + padLines(message.stack) : message.message;
 	return format.replace('%datetime%', formatDatetime(datetime)).replace('%message%', message);
 }
 
@@ -60,7 +59,7 @@ export default class Logger{
 
 	verbose(message){
 		const now = new Date;
-		process.stdout.write(applyFormat("\u001b[37;1m[%datetime%] \u001b[36;1mInfo:\u001b[0m %message%", now, message, 32) + nl);
+		process.stdout.write(applyFormat("\u001b[37;1m[%datetime%] \u001b[36;1mInfo:\u001b[0m %message%", now, message) + nl);
 		const { message: msg, stack } = getMessageAndStack(message);
 		const sendObj = {
 			source: this.#source,
@@ -75,7 +74,7 @@ export default class Logger{
 
 	log(message){
 		const now = new Date;
-		process.stdout.write(applyFormat("\u001b[37;1m[%datetime%] \u001b[32;1mInfo:\u001b[0m %message%", now, message, 32) + nl);
+		process.stdout.write(applyFormat("\u001b[37;1m[%datetime%] \u001b[32;1mInfo:\u001b[0m %message%", now, message) + nl);
 		const { message: msg, stack } = getMessageAndStack(message);
 		const sendObj = {
 			source: this.#source,
@@ -90,7 +89,7 @@ export default class Logger{
 
 	warn(message){
 		const now = new Date;
-		process.stderr.write(applyFormat("\u001b[37;1m[%datetime%] \u001b[33;1mWarning:\u001b[0m %message%", now, message, 35) + nl);
+		process.stderr.write(applyFormat("\u001b[37;1m[%datetime%] \u001b[33;1mWarning:\u001b[0m %message%", now, message) + nl);
 		const { message: msg, stack } = getMessageAndStack(message);
 		const sendObj = {
 			source: this.#source,
@@ -105,7 +104,7 @@ export default class Logger{
 
 	error(message){
 		const now = new Date;
-		process.stderr.write(applyFormat("\u001b[37;1m[%datetime%] \u001b[31;1mERROR:\u001b[0m %message%", now, message, 33) + nl);
+		process.stderr.write(applyFormat("\u001b[37;1m[%datetime%] \u001b[31;1mERROR:\u001b[0m %message%", now, message) + nl);
 		const { message: msg, stack } = getMessageAndStack(message);
 		const sendObj = {
 			source: this.#source,
@@ -120,7 +119,7 @@ export default class Logger{
 
 	critical(message){
 		const now = new Date;
-		process.stderr.write(applyFormat("\u001b[37;1m[%datetime%] \u001b[35;1mCRITICAL:\u001b[0m %message%", now, message, 36) + nl);
+		process.stderr.write(applyFormat("\u001b[37;1m[%datetime%] \u001b[35;1mCRITICAL:\u001b[0m %message%", now, message) + nl);
 		const { message: msg, stack } = getMessageAndStack(message);
 		const sendObj = {
 			source: this.#source,

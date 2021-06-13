@@ -1,5 +1,3 @@
-import removeANSIControls from '../components/remove-ansi-controls.mjs';
-
 const head = `
 const nl = '\\n';
 
@@ -35,14 +33,13 @@ function getMessageAndStack(data){
 	else return getMessageAndStack('' + data);
 }
 
-function padLines(text, length){
-	const prefix = ''.padStart(length, ' ');
-	return text.split(nl).map(line => (prefix + line)).join(nl);
+function padLines(text){
+	return text.split(nl).map(line => ('    ' + line.trimLeft())).join(nl);
 }
 
-function applyFormat(format, datetime, message, stackPadLen){
+function applyFormat(format, datetime, message){
 	message = getMessageAndStack(message);
-	message = message.stack ? message.message + nl + padLines(message.stack, stackPadLen) : message.message;
+	message = message.stack ? message.message + nl + padLines(message.stack) : message.message;
 	return format.replace('%datetime%', formatDatetime(datetime)).replace('%message%', message);
 }
 
@@ -79,14 +76,12 @@ export default struct => {
 		if(!Number.isNaN(+code)){
 			const { name, description, mq_format, stdout_format, stderr_format } = struct[code];
 			const format = stdout_format ? stdout_format : stderr_format;
-			const noAnsiFormat = removeANSIControls(format).replace('%datetime%', dtFormat);
-			const prefixLen = noAnsiFormat.split('%message%')[0].length;
 			js += `
 	${name}(message){
 		const now = new Date;${
 			format
 			? `
-		process.${stdout_format ? 'stdout' : 'stderr'}.write(applyFormat(${JSON.stringify(format)}, now, message, ${prefixLen}) + nl);`
+		process.${stdout_format ? 'stdout' : 'stderr'}.write(applyFormat(${JSON.stringify(format)}, now, message) + nl);`
 			: ''
 		}${
 			mq_format

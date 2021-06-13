@@ -118,6 +118,6 @@ export default struct => {
 	return {
 		'logger.js': js,
 		'index.d.ts': ts,
-		'index.mjs': 'export * from "https://raw.githubusercontent.com/matrixbotio/constants/master/logger/logger.js";\n',
+		'index.mjs': 'export { default as default } from "https://raw.githubusercontent.com/matrixbotio/constants/master/logger/logger.js";\n',
 	}
 }

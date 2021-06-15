@@ -22,13 +22,6 @@ function _<C extends number, N extends string, M extends string>(code: C, name: 
 export const
 `.slice(1);
 
-const pkgjson = JSON.stringify({
-	name: '@/constants/errors',
-	version: '0.0.0',
-	module: 'index.mjs',
-	types: 'index.d.ts',
-}, null, '    ') + '\n';
-
 export default struct => {
 	let res = '';
 	for(const section in struct){
@@ -43,6 +36,5 @@ export default struct => {
 		'errors.js': head + res.slice(0, -3) + ';\n',
 		'errors.ts': tsHead + res.slice(0, -3) + ';\n',
 		'index.d.ts': 'export * from "./errors";\n',
-		'package.json': pkgjson,
 	};
 }

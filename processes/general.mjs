@@ -1,6 +1,7 @@
 import { promises } from 'fs';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
+import java from '../generators/general-java.mjs';
 
 const { writeFile, readFile, readdir, mkdir } = promises;
 
@@ -24,6 +25,10 @@ export default async () => {
 	const staticFiles = await readDirRecursive(staticDir);
 	const targetFiles = {};
 	await Promise.all(staticFiles.map(async fname => { targetFiles[fname] = readFile(resolve(staticDir, fname), 'utf8') }));
+	Object.assign(...await Promise.all([
+		targetFiles,
+		java(),
+	]));
 	await Promise.all(Object.keys(targetFiles).map(async file => {
 		const destFile = resolve(dest, file);
 		try{ await mkdir(resolve(destFile, '..'), { recursive: true }) } catch(e){}

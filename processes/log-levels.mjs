@@ -17,9 +17,9 @@ const dest = resolve(ghWorkspace, destPath, 'logger');
 export default async () => {
 	try{ await mkdir(dest) } catch(e){}
 	const structure = await yaml;
-	const targetFiles = Object.assign(
+	const targetFiles = Object.assign(...await Promise.all([
 		{},
 		js(structure),
-	);
+	]));
 	await Promise.all(Object.keys(targetFiles).map(file => writeFile(resolve(dest, file), targetFiles[file])));
 }

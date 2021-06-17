@@ -2,7 +2,7 @@ import { promises } from 'fs';
 import { resolve } from 'path';
 import xml from 'xml2js';
 
-const { readFile, writeFile, mkdir } = promises;
+const { readFile } = promises;
 
 const pomPath = resolve(process.env.GITHUB_WORKSPACE, process.env['INPUT_DEST-PATH'], 'pom.xml');
 

@@ -1,6 +1,6 @@
 import { promises } from 'fs';
 import { resolve } from 'path';
-import { Parser, Builder } from 'xml2js';
+import xml from 'xml2js';
 
 const { readFile, writeFile, mkdir } = promises;
 
@@ -8,7 +8,7 @@ const pomPath = resolve(process.env.GITHUB_WORKSPACE, process.env['INPUT_DEST-PA
 
 function parse(str){
     return new Promise((resolve, reject) => {
-        (new Parser).parseString(str, (e, r) => {
+        (new xml.Parser).parseString(str, (e, r) => {
             if(e) reject(e);
             else resolve(r);
         });
@@ -16,7 +16,7 @@ function parse(str){
 }
 
 function build(obj){
-    return (new Builder).buildObject(obj);
+    return (new xml.Builder).buildObject(obj);
 }
 
 function incrementVersion(xml){

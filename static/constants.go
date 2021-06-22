@@ -4,12 +4,15 @@ import (
 	"io/ioutil"
 	"net/http"
 	"encoding/json"
+
+	"github.com/go-stack/stack"
 )
 
 type APIError struct {
 	Message string        `json:"message"`
 	Code    int           `json:"code"`
 	Name    string        `json:"name"`
+	Stack   string        `json:"-"`
 }
 
 func get(url string) string {
@@ -36,6 +39,7 @@ func err(code int, name string, msg string) *APIError {
 		Message: msg,
 		Code:    code,
 		Name:    name,
+		Stack:   stack.Trace().TrimRuntime().String(),
 	}
 }
 
@@ -46,5 +50,5 @@ func Error(name string) *APIError {
 	if !exists {
 		return err(-1, "ERR_UNKNOWN", "Cannot get error named " + name)
 	}
-	return res
+	return err(res.Code, res.Name, res.Message)
 }

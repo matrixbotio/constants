@@ -2,7 +2,10 @@ package constants
 
 import (
 	"github.com/go-stack/stack"
+	"strings"
 )
+
+const errStackJoin = "\n    at "
 
 type APIError struct {
 	Message string `json:"message"`
@@ -17,12 +20,21 @@ func getErrors(url string) map[string]*APIError {
 	return storage
 }
 
+func getStack() string {
+	rt := stack.Trace().TrimRuntime()
+	rt = rt[3:]
+	str := rt.String()
+	str = str[1:len(str)-1]
+	arr := strings.Split(str, " ")
+	return errStackJoin[1:] + strings.Join(arr, errStackJoin)
+}
+
 func err(code int, name string, msg string) *APIError {
 	return &APIError{
 		Message: msg,
 		Code:    code,
 		Name:    name,
-		Stack:   stack.Trace().TrimRuntime().String(),
+		Stack:   getStack(),
 	}
 }
 

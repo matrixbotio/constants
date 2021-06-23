@@ -1,10 +1,6 @@
 package constants
 
 import (
-	"io/ioutil"
-	"net/http"
-	"encoding/json"
-
 	"github.com/go-stack/stack"
 )
 
@@ -15,22 +11,9 @@ type APIError struct {
 	Stack   string        `json:"-"`
 }
 
-func get(url string) string {
-	resp, err := http.Get(url)
-	if err != nil {
-		return "{}"
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "{}"
-	}
-	return string(body)
-}
-
 func getErrors(url string) map[string]*APIError {
-	var storage map[string]*APIError
-	json.Unmarshal([]byte(get(url)), &storage)
+	storage := make(map[string]*APIError)
+	getJSON(url, &storage)
 	return storage
 }
 

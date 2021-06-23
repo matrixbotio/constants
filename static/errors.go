@@ -5,10 +5,10 @@ import (
 )
 
 type APIError struct {
-	Message string        `json:"message"`
-	Code    int           `json:"code"`
-	Name    string        `json:"name"`
-	Stack   string        `json:"-"`
+	Message string `json:"message"`
+	Code    int    `json:"code"`
+	Name    string `json:"name"`
+	Stack   string `json:"-"`
 }
 
 func getErrors(url string) map[string]*APIError {
@@ -29,9 +29,8 @@ func err(code int, name string, msg string) *APIError {
 var errors = getErrors("https://raw.githubusercontent.com/matrixbotio/constants/master/errors/errors.json")
 
 func Error(name string) *APIError {
-	res, exists := errors["foo"]
-	if !exists {
-		return err(-1, "ERR_UNKNOWN", "Cannot get error named " + name)
+	if res, exists := errors[name]; exists {
+		return err(res.Code, res.Name, res.Message)
 	}
-	return err(res.Code, res.Name, res.Message)
+	return err(-1, "ERR_UNKNOWN", "Cannot get error named "+name)
 }

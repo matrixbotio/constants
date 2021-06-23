@@ -59,12 +59,12 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 	now := time.Now()
 	var msgStack msgStackType
 	if msg, ok := message.(string); ok {
-        msgStack.Message = msg
+		msgStack.Message = msg
 		msgStack.Stack = ""
-    } else if err, ok := message.(*APIError); ok {
-        msgStack.Message = err.Message
+	} else if err, ok := message.(*APIError); ok {
+		msgStack.Message = err.Message
 		msgStack.Stack = err.Stack
-    } else {
+	} else {
 		return
 	}
 	formattedTime := now.Format(l.DTFormat)
@@ -78,12 +78,10 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 		Message: msgStack.Message,
 	}
 	if len(msgStack.Stack) > 0 {
-		formattedMessage += "
-" + msgStack.Stack
+		formattedMessage += "\n" + msgStack.Stack
 		sendObj.Stack = msgStack.Stack
 	}
-	output.WriteString(strings.NewReplacer("%datetime%", formattedTime, "%message%", formattedMessage).Replace(template) + "
-")
+	output.WriteString(strings.NewReplacer("%datetime%", formattedTime, "%message%", formattedMessage).Replace(template) + "\n")
 	r, _ := json.Marshal(sendObj)
 	l.Dev.Send(string(r))
 }
@@ -92,7 +90,7 @@ func NewLogger(dev interface{}, host string, source string) *Logger {
 	format, formatLen := getSuitableDatetimeFormat(logConfig["&datetime_format"].(string))
 	logLevels := make(map[string]*logLevelDesc)
 	for strlevel, element := range logConfig {
-        if level, err := strconv.Atoi(strlevel); err == nil {
+		if level, err := strconv.Atoi(strlevel); err == nil {
 			if elMap, ok := element.(map[string]string); ok {
 				logLevel := &logLevelDesc{
 					Level: level,
@@ -107,7 +105,7 @@ func NewLogger(dev interface{}, host string, source string) *Logger {
 				logLevels[elMap["name"]] = logLevel
 			}
 		}
-    }
+	}
 	return &Logger {
 		Dev: dev.(logDevice),
 		Host: host,

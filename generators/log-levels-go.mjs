@@ -10,6 +10,8 @@ import (
 	"strconv"
 )
 
+var wg sync.WaitGroup
+
 type logDevice interface{
     Send(data string)
 }
@@ -57,6 +59,7 @@ func getLogs(url string) map[string]interface{} {
 var logConfig = getLogs("https://raw.githubusercontent.com/matrixbotio/constants/master/logger/logger.json")
 
 func (l *Logger) baseWriter(message interface{}, output *os.File, template string, level int){
+	defer wg.Done()
 	now := time.Now()
 	var msgStack msgStackType
 	if msg, ok := message.(string); ok {
@@ -116,6 +119,10 @@ func NewLogger(dev interface{}, host string, source string) *Logger {
 		LogLevels: logLevels,
 	}
 }
+
+func AwaitLoggers() {
+	wg.Wait()
+}
 `.slice(1);
 
 export default struct => {
@@ -129,8 +136,9 @@ func (l *Logger) ${struct[level].name.slice(0, 1).toUpperCase() + struct[level].
 	if logLevel.Stderr {
 		output = os.Stderr
 	}
+	wg.Add(1)
 	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
-} 
+}
 `;
 	}
 	return {

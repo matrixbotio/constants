@@ -9,9 +9,9 @@ import (
 	"strconv"
 )
 
-type logDevice struct{}
-
-func (dev *logDevice) Send(data string)
+type logDevice interface{
+    Send(data string)
+}
 
 type msgStackType struct {
 	Message string

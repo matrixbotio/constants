@@ -9,6 +9,8 @@ import (
 	"strconv"
 )
 
+var wg sync.WaitGroup
+
 type logDevice interface{
     Send(data string)
 }
@@ -56,6 +58,7 @@ func getLogs(url string) map[string]interface{} {
 var logConfig = getLogs("https://raw.githubusercontent.com/matrixbotio/constants/master/logger/logger.json")
 
 func (l *Logger) baseWriter(message interface{}, output *os.File, template string, level int){
+	defer wg.Done()
 	now := time.Now()
 	var msgStack msgStackType
 	if msg, ok := message.(string); ok {
@@ -116,6 +119,10 @@ func NewLogger(dev interface{}, host string, source string) *Logger {
 	}
 }
 
+func AwaitLoggers() {
+	wg.Wait()
+}
+
 // Very detailed logs
 func (l *Logger) Verbose(message interface{}){
 	logLevel := l.LogLevels["verbose"]
@@ -123,8 +130,9 @@ func (l *Logger) Verbose(message interface{}){
 	if logLevel.Stderr {
 		output = os.Stderr
 	}
+	wg.Add(1)
 	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
-} 
+}
 
 // Important logs
 func (l *Logger) Log(message interface{}){
@@ -133,8 +141,9 @@ func (l *Logger) Log(message interface{}){
 	if logLevel.Stderr {
 		output = os.Stderr
 	}
+	wg.Add(1)
 	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
-} 
+}
 
 // Something may go wrong
 func (l *Logger) Warn(message interface{}){
@@ -143,8 +152,9 @@ func (l *Logger) Warn(message interface{}){
 	if logLevel.Stderr {
 		output = os.Stderr
 	}
+	wg.Add(1)
 	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
-} 
+}
 
 // Failed to do something. This may cause problems!
 func (l *Logger) Error(message interface{}){
@@ -153,8 +163,9 @@ func (l *Logger) Error(message interface{}){
 	if logLevel.Stderr {
 		output = os.Stderr
 	}
+	wg.Add(1)
 	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
-} 
+}
 
 // Critical error. Node's shutted down!
 func (l *Logger) Critical(message interface{}){
@@ -163,5 +174,6 @@ func (l *Logger) Critical(message interface{}){
 	if logLevel.Stderr {
 		output = os.Stderr
 	}
+	wg.Add(1)
 	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
-} 
+}

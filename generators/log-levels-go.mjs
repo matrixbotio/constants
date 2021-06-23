@@ -23,7 +23,7 @@ type sendMessageFormat struct {
 	Timestamp int64       \`json:"timestamp"\`
 	Level     int         \`json:"level"\`
 	Message   string      \`json:"message"\`
-	Code      interface{} \`json:"code"\`
+	Code      interface{} \`json:"code,omitempty"\`
 	Stack     interface{} \`json:"stack,omitempty"\`
 }
 

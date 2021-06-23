@@ -2,6 +2,8 @@ import YAML from 'yaml';
 import { promises } from 'fs';
 import { resolve } from 'path';
 import js from '../generators/log-levels-js.mjs';
+import json from '../generators/log-levels-json.mjs';
+import go from '../generators/log-levels-go.mjs';
 
 const { readFile, writeFile, mkdir } = promises;
 
@@ -20,6 +22,8 @@ export default async () => {
 	const targetFiles = Object.assign(...await Promise.all([
 		{},
 		js(structure),
+		json(structure),
+		go(structure),
 	]));
 	await Promise.all(Object.keys(targetFiles).map(file => writeFile(resolve(dest, file), targetFiles[file])));
 }

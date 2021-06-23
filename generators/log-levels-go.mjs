@@ -79,10 +79,10 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 		Message: msgStack.Message,
 	}
 	if len(msgStack.Stack) > 0 {
-		formattedMessage += "\n" + msgStack.Stack
+		formattedMessage += "\\n" + msgStack.Stack
 		sendObj.Stack = msgStack.Stack
 	}
-	output.WriteString(strings.NewReplacer("%datetime%", formattedTime, "%message%", formattedMessage).Replace(template) + "\n")
+	output.WriteString(strings.NewReplacer("%datetime%", formattedTime, "%message%", formattedMessage).Replace(template) + "\\n")
 	r, _ := json.Marshal(sendObj)
 	l.Dev.Send(string(r))
 }

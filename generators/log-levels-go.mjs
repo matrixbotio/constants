@@ -8,6 +8,7 @@ import (
 	"unicode/utf8"
 	"encoding/json"
 	"strconv"
+	"sync"
 )
 
 var wg sync.WaitGroup

@@ -16,18 +16,13 @@ type logDevice interface{
     Send(data string)
 }
 
-type msgStackType struct {
-	Message string
-	Stack string
-}
-
 type sendMessageFormat struct {
 	Source    string      `json:"source"`
 	Host      string      `json:"host"`
 	Timestamp int64       `json:"timestamp"`
 	Level     int         `json:"level"`
-	Code      int         `json:"code"`
 	Message   string      `json:"message"`
+	Code      interface{} `json:"code"`
 	Stack     interface{} `json:"stack,omitempty"`
 }
 
@@ -61,29 +56,26 @@ var logConfig = getLogs("https://raw.githubusercontent.com/matrixbotio/constants
 func (l *Logger) baseWriter(message interface{}, output *os.File, template string, level int){
 	defer wg.Done()
 	now := time.Now()
-	var msgStack msgStackType
-	if msg, ok := message.(string); ok {
-		msgStack.Message = msg
-		msgStack.Stack = ""
-	} else if err, ok := message.(*APIError); ok {
-		msgStack.Message = err.Message
-		msgStack.Stack = err.Stack
-	} else {
-		return
-	}
-	formattedTime := now.Format(l.DTFormat)
-	formattedTime += strings.Repeat("0", l.DTFormatLen - utf8.RuneCountInString(formattedTime))
-	formattedMessage := msgStack.Message
 	sendObj := &sendMessageFormat{
 		Source: l.Source,
 		Host: l.Host,
 		Timestamp: now.Unix(),
 		Level: level,
-		Message: msgStack.Message,
 	}
-	if len(msgStack.Stack) > 0 {
-		formattedMessage += "\n" + msgStack.Stack
-		sendObj.Stack = msgStack.Stack
+	if msg, ok := message.(string); ok {
+		sendObj.Message = msg
+	} else if err, ok := message.(*APIError); ok {
+		sendObj.Message = err.Message
+		sendObj.Stack = err.Stack
+		sendObj.Code = err.Code
+	} else {
+		return
+	}
+	formattedTime := now.Format(l.DTFormat)
+	formattedTime += strings.Repeat("0", l.DTFormatLen - utf8.RuneCountInString(formattedTime))
+	formattedMessage := sendObj.Message
+	if sendObj.Stack != nil {
+		formattedMessage += "\n" + sendObj.Stack.(string)
 	}
 	output.WriteString(strings.NewReplacer("%datetime%", formattedTime, "%message%", formattedMessage).Replace(template) + "\n")
 	r, _ := json.Marshal(sendObj)

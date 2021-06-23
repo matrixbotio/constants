@@ -91,18 +91,18 @@ func NewLogger(dev interface{}, host string, source string) *Logger {
 	logLevels := make(map[string]*logLevelDesc)
 	for strlevel, element := range logConfig {
 		if level, err := strconv.Atoi(strlevel); err == nil {
-			if elMap, ok := element.(map[string]string); ok {
+			if elMap, ok := element.(map[string]interface{}); ok {
 				logLevel := &logLevelDesc{
 					Level: level,
 					Stderr: false,
 				}
 				if stderr, exists := elMap["stderr_format"]; exists {
 					logLevel.Stderr = true
-					logLevel.Format = stderr
+					logLevel.Format = stderr.(string)
 				} else if stdout, exists := elMap["stdout_format"]; exists {
-					logLevel.Format = stdout
+					logLevel.Format = stdout.(string)
 				}
-				logLevels[elMap["name"]] = logLevel
+				logLevels[elMap["name"].(string)] = logLevel
 			}
 		}
 	}

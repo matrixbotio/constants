@@ -1,0 +1,33 @@
+{
+	"1": {
+		"name": "verbose",
+		"description": "Very detailed logs",
+		"mq_format": "JSON",
+		"stdout_format": "\u001b[37;1m[%datetime%] \u001b[36;1mInfo:\u001b[0m %message%"
+	},
+	"2": {
+		"name": "log",
+		"description": "Important logs",
+		"mq_format": "JSON",
+		"stdout_format": "\u001b[37;1m[%datetime%] \u001b[32;1mInfo:\u001b[0m %message%"
+	},
+	"3": {
+		"name": "warn",
+		"description": "Something may go wrong",
+		"mq_format": "JSON",
+		"stderr_format": "\u001b[37;1m[%datetime%] \u001b[33;1mWarning:\u001b[0m %message%"
+	},
+	"4": {
+		"name": "error",
+		"description": "Failed to do something. This may cause problems!",
+		"mq_format": "JSON",
+		"stderr_format": "\u001b[37;1m[%datetime%] \u001b[31;1mERROR:\u001b[0m %message%"
+	},
+	"5": {
+		"name": "critical",
+		"description": "Critical error. Node's shutted down!",
+		"mq_format": "JSON",
+		"stderr_format": "\u001b[37;1m[%datetime%] \u001b[35;1mCRITICAL:\u001b[0m %message%"
+	},
+	"&datetime_format": "YYYY-MM-DD HH:mm:ss.sss"
+}

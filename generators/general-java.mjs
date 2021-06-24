@@ -23,7 +23,7 @@ function incrementVersion(xml){
     const { version } = xml.project;
     let [ major, minor, patch ] = version[0].split('.');
     version[0] = `${major}.${minor}.${++patch}`;
-    console.log('::set-output:: version=' + version[0]);
+    console.log('::set-output name=version::' + version[0]);
 }
 
 export default async () => {

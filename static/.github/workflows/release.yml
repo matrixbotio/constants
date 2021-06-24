@@ -15,8 +15,6 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
         with:
-          fetch-depth: '1'
-          path: master
           ref: master
           token: ${{ secrets.GH_CI_TOKEN }}
 

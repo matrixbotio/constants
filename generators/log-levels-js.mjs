@@ -72,9 +72,10 @@ export default struct => {
 	const dtFormat = struct['datetime_format'];
 	let js = head.replace('%datetime_format%', JSON.stringify(dtFormat)),
 		ts = tsHead;
-	for(let code in struct){
+	const levels = struct['levels'];
+	for(let code in levels){
 		if(!Number.isNaN(+code)){
-			const { name, description, mq_format, stdout_format, stderr_format } = struct[code];
+			const { name, description, mq_format, stdout_format, stderr_format } = levels[code];
 			const format = stdout_format ? stdout_format : stderr_format;
 			js += `
 	${name}(message){

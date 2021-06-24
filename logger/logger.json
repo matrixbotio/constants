@@ -29,5 +29,5 @@
 		"mq_format": "JSON",
 		"stderr_format": "\u001b[37;1m[%datetime%] \u001b[35;1mCRITICAL:\u001b[0m %message%"
 	},
-	"&datetime_format": "YYYY-MM-DD HH:mm:ss.sss"
+	"datetime_format": "YYYY-MM-DD HH:mm:ss.sss"
 }

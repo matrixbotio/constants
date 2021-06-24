@@ -16,30 +16,30 @@ function formatDatetime(datetime){
 		.replace('YYYY', datetime.getFullYear());
 }
 
-function getMessageAndStack(data){
-	if(typeof data === 'string'){
-		let [ message, ...stack ] = data.split(nl);
-		return {
-			message,
-			stack: stack.join(nl),
-		}
-	}
-	else if(data instanceof Error){
-		return 'stack' in data ? getMessageAndStack(data.stack) : {
-			message: data.message,
-			stack: '',
-		};
-	}
-	else return getMessageAndStack('' + data);
+function getBaseLogData(data){
+    if(data instanceof Error){
+        const res = {
+            message: data.name + ': ' + data.message,
+        };
+        if('code' in data) res.code = data.code;
+        if('stack' in data){
+            let stack = data.stack.split(nl);
+            const maybeMessage = stack.shift();
+            stack = padLines(stack);
+            if(maybeMessage !== res.message) stack.unshift(maybeMessage);
+            res.stack = stack.join(nl);
+        }
+		return res;
+	} else return {
+        message: '' + data,
+    };
 }
 
 function padLines(text){
-	return text.split(nl).map(line => ('    ' + line.trimLeft())).join(nl);
+	return text.map(line => ('    ' + line.trimLeft()));
 }
 
 function applyFormat(format, datetime, message){
-	message = getMessageAndStack(message);
-	message = message.stack ? message.message + nl + padLines(message.stack) : message.message;
 	return format.replace('%datetime%', formatDatetime(datetime)).replace('%message%', message);
 }
 
@@ -57,6 +57,19 @@ export default class Logger{
 	#ts(date){
 		return Math.floor(date / 1000);
 	}
+
+    #log(message, writer, format){
+		const now = new Date;
+		writer.write(applyFormat(format, now, message) + nl);
+		const sendObj = Object.assign({
+			source: this.#source,
+			host: this.#host,
+			level: 1,
+			timestamp: this.#ts(now),
+		}, getBaseLogData(message));
+		if(stack) sendObj.stack = stack;
+		this.#dev.send(JSON.stringify(sendObj));
+    }
 `.slice(1);
 
 const tsHead = `
@@ -75,30 +88,11 @@ export default struct => {
 	const levels = struct['levels'];
 	for(let code in levels){
 		if(!Number.isNaN(+code)){
-			const { name, description, mq_format, stdout_format, stderr_format } = levels[code];
+			const { name, description, stdout_format, stderr_format } = levels[code];
 			const format = stdout_format ? stdout_format : stderr_format;
 			js += `
 	${name}(message){
-		const now = new Date;${
-			format
-			? `
-		process.${stdout_format ? 'stdout' : 'stderr'}.write(applyFormat(${JSON.stringify(format)}, now, message) + nl);`
-			: ''
-		}${
-			mq_format
-			? `
-		const { message: msg, stack } = getMessageAndStack(message);
-		const sendObj = {
-			source: this.#source,
-			host: this.#host,
-			level: ${code},
-			timestamp: this.#ts(now),
-			message: msg,
-		};
-		if(stack) sendObj.stack = stack;
-		this.#dev.send(JSON.stringify(sendObj));`
-			: ''
-		}
+		this.#log(message, process.${stdout_format ? 'stdout' : 'stderr'}, ${JSON.stringify(format)});
 	}
 `;
 			ts += `

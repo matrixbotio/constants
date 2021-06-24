@@ -37,6 +37,7 @@ jobs:
 
       - name: Generate files with constants
         uses: matrixbotio/constants@generator-action
+        id: generator
         with:
           config-path: config
           dest-path: master
@@ -52,3 +53,10 @@ jobs:
           git commit -m "Update constants ($SHA)" && \
           git push origin master || \
           echo Changes not found
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.generator.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_CI_TOKEN }}

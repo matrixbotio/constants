@@ -15,15 +15,8 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
         with:
-          fetch-depth: '1'
-          path: master
           ref: master
           token: ${{ secrets.GH_CI_TOKEN }}
-
-      - name: List files
-        run: |
-          echo "List files in $GITHUB_WORKSPACE"
-          ls $GITHUB_WORKSPACE
 
       - name: Get release tag from XML
         id: xml

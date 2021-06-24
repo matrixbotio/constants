@@ -84,7 +84,7 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 }
 
 func NewLogger(dev interface{}, host string, source string) *Logger {
-	format, formatLen := getSuitableDatetimeFormat(logConfig["&datetime_format"].(string))
+	format, formatLen := getSuitableDatetimeFormat(logConfig["datetime_format"].(string))
 	logLevels := make(map[string]*logLevelDesc)
 	for strlevel, element := range logConfig {
 		if level, err := strconv.Atoi(strlevel); err == nil {

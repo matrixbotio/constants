@@ -69,7 +69,7 @@ export default class Logger{
 `.slice(1);
 
 export default struct => {
-	const dtFormat = struct['&datetime_format'];
+	const dtFormat = struct['datetime_format'];
 	let js = head.replace('%datetime_format%', JSON.stringify(dtFormat)),
 		ts = tsHead;
 	for(let code in struct){

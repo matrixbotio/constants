@@ -24,8 +24,8 @@ jobs:
         id: xml
         uses: mavrosxristoforos/get-xml-info@1.0
         with:
-          xml-file: 'pom.xml'
-          xpath: '/project/version/text()'
+          xml-file: ${{ github.workspace }}/pom.xml
+          xpath: /project/version/text()
 
       - name: Create release
         uses: softprops/action-gh-release@v1

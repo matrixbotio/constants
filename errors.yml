@@ -32,27 +32,33 @@ BOT:
     - Invalid order
 
 DATA:
-  EMPTY:
-    - -35200
-    - Data empty
-  EXISTS:
-    - -35030
-    - Data exists
-  HANDLE_ERR:
-    - -35001
-    - Data handle error
-  INVALID:
-    - -35100
-    - Invalid data
   NOT_FOUND:
     - -35010
     - Data not found
+  HANDLE_ERR:
+    - -35020
+    - Data handle error
+  EXISTS:
+    - -35030
+    - Data exists
   NO_ACCESS:
     - -35040
     - Data no acesss
   REQ_ERR:
-    - -35020
+    - -35050
     - Data request error
+  PARSE_ERR:
+    - -35060
+    - Data parse error
+  ENCODE_ERR:
+    - -35070
+    - Data encode error
+  INVALID:
+    - -35100
+    - Invalid data
+  EMPTY:
+    - -35200
+    - Data empty
   UNKNOWN:
     - -35300
     - Data unknown
@@ -94,14 +100,17 @@ USER:
 
 SERVICE:
   DISCONNECTED:
-    - -37100
+    - -37000
     - Service disconnected
   NO_ACCESS:
     - -37010
     - No access
   REQ_FAILED:
-    - -37010
+    - -37020
     - Service request failed
+  CONN_ERR:
+    - -37030
+    - Failed to connect to the service
 
 NOTIFICATIONS:
   CONFIG_ERROR:
@@ -113,3 +122,8 @@ NOTIFICATIONS:
   TELEGRAM_AUTH_ERROR:
     - -38000
     - Telegram user authentication error
+
+TASK:
+  TASK_HANDLE_ERR:
+    - -39100
+    - Task processing error

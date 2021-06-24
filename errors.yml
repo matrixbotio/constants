@@ -108,6 +108,9 @@ SERVICE:
   NO_ACCESS:
     - -37020
     - No access
+  CONN_ERR:
+    - -37200
+    - Failed to connect to the service
 
 NOTIFICATIONS:
   CONFIG_ERROR:
@@ -122,5 +125,5 @@ NOTIFICATIONS:
 
 TASK:
   HANDLE_ERR:
-    -39100
-    Task processing error
+    - -39100
+    - Task processing error

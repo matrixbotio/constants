@@ -20,12 +20,17 @@ jobs:
           ref: master
           token: ${{ secrets.GH_CI_TOKEN }}
 
+      - name: List files
+        run: |
+          echo "List files in $GITHUB_WORKSPACE"
+          ls $GITHUB_WORKSPACE
+
       - name: Get release tag from XML
         id: xml
         uses: mavrosxristoforos/get-xml-info@1.0
         with:
-          xml-file: ${{ github.workspace }}/pom.xml
-          xpath: /project/version/text()
+          xml-file: 'pom.xml'
+          xpath: '/project/version/text()'
 
       - name: Create release
         uses: softprops/action-gh-release@v1

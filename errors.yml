@@ -56,6 +56,12 @@ DATA:
   UNKNOWN:
     - -35300
     - Data unknown
+  ENCODE_ERR:
+    - -35003
+    - Data encode error
+  PARSE_ERR:
+    - -35002
+    - Data parse error
 
 USER:
   CRED_INVALID:
@@ -96,12 +102,12 @@ SERVICE:
   DISCONNECTED:
     - -37100
     - Service disconnected
-  NO_ACCESS:
-    - -37010
-    - No access
   REQ_FAILED:
     - -37010
     - Service request failed
+  NO_ACCESS:
+    - -37020
+    - No access
 
 NOTIFICATIONS:
   CONFIG_ERROR:
@@ -113,3 +119,8 @@ NOTIFICATIONS:
   TELEGRAM_AUTH_ERROR:
     - -38000
     - Telegram user authentication error
+
+TASK:
+  HANDLE_ERR:
+    -39100
+    Task processing error

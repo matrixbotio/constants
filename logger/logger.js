@@ -16,22 +16,22 @@ function formatDatetime(datetime){
 }
 
 function getBaseLogData(data){
-    if(data instanceof Error){
-        const res = {
-            message: data.name + ': ' + data.message,
-        };
-        if('code' in data) res.code = data.code;
-        if('stack' in data){
-            let stack = data.stack.split(nl);
-            const maybeMessage = stack.shift();
-            stack = padLines(stack);
-            if(maybeMessage !== res.message) stack.unshift(maybeMessage);
-            res.stack = stack.join(nl);
-        }
+	if(data instanceof Error){
+		const res = {
+			message: data.name + ': ' + data.message,
+		};
+		if('code' in data) res.code = data.code;
+		if('stack' in data){
+			let stack = data.stack.split(nl);
+			const maybeMessage = stack.shift();
+			stack = padLines(stack);
+			if(maybeMessage !== res.message) stack.unshift(maybeMessage);
+			res.stack = stack.join(nl);
+		}
 		return res;
 	} else return {
-        message: '' + data,
-    };
+		message: '' + data,
+	};
 }
 
 function padLines(text){
@@ -57,7 +57,7 @@ export default class Logger{
 		return Math.floor(date / 1000);
 	}
 
-    #log(message, writer, format){
+	#log(message, writer, format){
 		const now = new Date;
 		writer.write(applyFormat(format, now, message) + nl);
 		const sendObj = Object.assign({
@@ -68,7 +68,7 @@ export default class Logger{
 		}, getBaseLogData(message));
 		if(stack) sendObj.stack = stack;
 		this.#dev.send(JSON.stringify(sendObj));
-    }
+	}
 
 	verbose(message){
 		this.#log(message, process.stdout, "\u001b[37;1m[%datetime%] \u001b[36;1mInfo:\u001b[0m %message%");

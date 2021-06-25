@@ -84,6 +84,16 @@
 		"message": "Data unknown",
 		"name": "DATA_UNKNOWN"
 	},
+	"DATA_ENCODE_ERR": {
+		"code": -35003,
+		"message": "Data encode error",
+		"name": "DATA_ENCODE_ERR"
+	},
+	"DATA_PARSE_ERR": {
+		"code": -35002,
+		"message": "Data parse error",
+		"name": "DATA_PARSE_ERR"
+	},
 	"USER_CRED_INVALID": {
 		"code": -36300,
 		"message": "User credentials invalid",
@@ -144,15 +154,20 @@
 		"message": "Service disconnected",
 		"name": "SERVICE_DISCONNECTED"
 	},
-	"SERVICE_NO_ACCESS": {
-		"code": -37010,
-		"message": "No access",
-		"name": "SERVICE_NO_ACCESS"
-	},
 	"SERVICE_REQ_FAILED": {
 		"code": -37010,
 		"message": "Service request failed",
 		"name": "SERVICE_REQ_FAILED"
+	},
+	"SERVICE_NO_ACCESS": {
+		"code": -37020,
+		"message": "No access",
+		"name": "SERVICE_NO_ACCESS"
+	},
+	"SERVICE_CONN_ERR": {
+		"code": -37200,
+		"message": "Failed to connect to the service",
+		"name": "SERVICE_CONN_ERR"
 	},
 	"NOTIFICATIONS_CONFIG_ERROR": {
 		"code": -38010,
@@ -168,5 +183,10 @@
 		"code": -38000,
 		"message": "Telegram user authentication error",
 		"name": "NOTIFICATIONS_TELEGRAM_AUTH_ERROR"
+	},
+	"TASK_HANDLE_ERR": {
+		"code": -39100,
+		"message": "Task processing error",
+		"name": "TASK_HANDLE_ERR"
 	}
 }

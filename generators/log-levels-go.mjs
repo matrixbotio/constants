@@ -122,11 +122,12 @@ func AwaitLoggers() {
 
 export default struct => {
 	let res = base;
-	for(const level in struct) if(!Number.isNaN(+level)){
+	const levels = struct['levels'];
+	for(const level in levels) if(!Number.isNaN(+level)){
 		res += `
-// ${struct[level].description}
-func (l *Logger) ${struct[level].name.slice(0, 1).toUpperCase() + struct[level].name.slice(1)}(message interface{}){
-	logLevel := l.LogLevels[${JSON.stringify(struct[level].name)}]
+// ${levels[level].description}
+func (l *Logger) ${levels[level].name.slice(0, 1).toUpperCase() + levels[level].name.slice(1)}(message interface{}){
+	logLevel := l.LogLevels[${JSON.stringify(levels[level].name)}]
 	output := os.Stdout
 	if logLevel.Stderr {
 		output = os.Stderr

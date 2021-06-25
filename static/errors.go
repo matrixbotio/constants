@@ -40,8 +40,11 @@ func err(code int, name string, msg string) *APIError {
 
 var errors = getErrors("https://raw.githubusercontent.com/matrixbotio/constants/master/errors/errors.json")
 
-func Error(name string) *APIError {
+func Error(name string, message ...string) *APIError {
 	if res, exists := errors[name]; exists {
+		if len(message) > 1 {
+			return err(res.Code, res.Name, message[0])
+		}
 		return err(res.Code, res.Name, res.Message)
 	}
 	return err(-1, "ERR_UNKNOWN", "Cannot get error named "+name)

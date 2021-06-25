@@ -117,3 +117,58 @@ func NewLogger(dev interface{}, host string, source string) *Logger {
 func AwaitLoggers() {
 	wg.Wait()
 }
+
+// Very detailed logs
+func (l *Logger) Verbose(message interface{}){
+	logLevel := l.LogLevels["verbose"]
+	output := os.Stdout
+	if logLevel.Stderr {
+		output = os.Stderr
+	}
+	wg.Add(1)
+	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
+}
+
+// Important logs
+func (l *Logger) Log(message interface{}){
+	logLevel := l.LogLevels["log"]
+	output := os.Stdout
+	if logLevel.Stderr {
+		output = os.Stderr
+	}
+	wg.Add(1)
+	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
+}
+
+// Something may go wrong
+func (l *Logger) Warn(message interface{}){
+	logLevel := l.LogLevels["warn"]
+	output := os.Stdout
+	if logLevel.Stderr {
+		output = os.Stderr
+	}
+	wg.Add(1)
+	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
+}
+
+// Failed to do something. This may cause problems!
+func (l *Logger) Error(message interface{}){
+	logLevel := l.LogLevels["error"]
+	output := os.Stdout
+	if logLevel.Stderr {
+		output = os.Stderr
+	}
+	wg.Add(1)
+	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
+}
+
+// Critical error. Node's shutted down!
+func (l *Logger) Critical(message interface{}){
+	logLevel := l.LogLevels["critical"]
+	output := os.Stdout
+	if logLevel.Stderr {
+		output = os.Stderr
+	}
+	wg.Add(1)
+	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
+}

@@ -7,7 +7,7 @@ function z(num, zeroCount){
 
 function formatDatetime(datetime){
 	return %datetime_format%
-		.replace('sss', z(datetime.getMilliseconds(), 3))
+		.replace('SSS', z(datetime.getMilliseconds(), 3))
 		.replace('ss', z(datetime.getSeconds(), 2))
 		.replace('mm', z(datetime.getMinutes(), 2))
 		.replace('HH', z(datetime.getHours(), 2))

@@ -36,7 +36,7 @@ class LoggerTest {
         assertEquals(source, logData.getSource());
         assertNull(logData.getStack());
         assertTrue(logData.getTimestamp() > 0L);
-        logger.close();
+        logger.waitAllThreads();
     }
 
     @Test
@@ -63,7 +63,7 @@ class LoggerTest {
         assertEquals(source, logData.getSource());
         assertNotNull(logData.getStack());
         assertTrue(logData.getTimestamp() > 0L);
-        logger.close();
+        logger.waitAllThreads();
     }
 
     @Test
@@ -80,7 +80,23 @@ class LoggerTest {
         logger.log("Test message");
         // then
         blockingQueue.poll(5, SECONDS);
-        logger.close();
+        logger.waitAllThreads();
+    }
+
+    @Test
+    public void should_handle_many_messages() {
+        final var logger = Logger.newLogger(s -> {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }, "host", "source");
+        for (int i=0; i<1000; ++i) {
+            logger.log(i);
+        }
+        logger.waitAllThreads();
     }
 
 }

@@ -5,15 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.matrix.bot.constants.model.LogData;
 import io.matrix.bot.constants.model.LogLevel;
 import io.matrix.bot.constants.model.LoggerConfig;
+import io.matrix.bot.constants.model.OutputType;
+import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import static io.matrix.bot.constants.Util.formatStackTraceString;
@@ -28,6 +30,9 @@ public class Logger {
     private static final String DEFAULT_ERROR_LOG_LEVEL = "error";
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ExecutorService asyncThreadPool = Executors.newCachedThreadPool();
+    private static final AtomicBoolean close = new AtomicBoolean(false);
+    private static final AtomicInteger numberOfActiveAsyncThreads = new AtomicInteger(0);
 
     private static LoggerConfig loggerConfig;
     static {
@@ -47,13 +52,14 @@ public class Logger {
         }
     }
 
-    private final ExecutorService asyncThreadPool = Executors.newCachedThreadPool();
+    // Used queue single-thread handler to print logs sequentially
+    private static final ArrayBlockingQueue<LogParams> queue = new ArrayBlockingQueue<>(100000);
 
     private final Function<String, Void> persistLogFunction;
     private final String host;
     private final String source;
 
-    public Logger(final Function<String, Void> persistLogFunction, final String host, final String source) {
+    private Logger(final Function<String, Void> persistLogFunction, final String host, final String source) {
         this.persistLogFunction = persistLogFunction;
         this.host = host;
         this.source = source;
@@ -83,30 +89,55 @@ public class Logger {
         baseWriter(message, 5);
     }
 
-    private void baseWriter(final Object message, final int levelCode) {
-        final var localDateTime = LocalDateTime.now();
-        final var timeStr = formatTime(localDateTime);
+    @SneakyThrows
+    private void baseWriter(final Object message, final int level) {
+        final var logParams = new LogParams(LocalDateTime.now(), level, message, persistLogFunction, host, source);
+        try {
+            queue.add(logParams);
+        } catch (final IllegalStateException e) {
+            printErr(formatTime(LocalDateTime.now()), "Exception adding log message to the queue in log baseWriter",
+                    getErrLogFormat(), e);
+        }
+    }
+
+    static {
         asyncThreadPool.submit(() -> {
-            try {
-                final LogLevel logLevel = loggerConfig.getLevels().get(String.valueOf(levelCode));
-                final var outputType = getOutputType(logLevel);
-                final var messageStr = getMessageAndStackTraceAsString(message, outputType.isPrintStackTrace());
-                final var logString = formatLogLine(getFormat(logLevel), timeStr, messageStr);
-                outputType.getOutput().println(logString);
-                final var logData = LogData.builder()
-                        .timestamp(localDateTime.toInstant(ZoneOffset.UTC).toEpochMilli())
-                        .message(getMessage(message))
-                        .level(levelCode)
-                        .stack(getStack(message, outputType.isPrintStackTrace()))
-                        .host(host)
-                        .source(source)
-                        .code(getCode(message))
-                        .build();
-                persistLogFunction.apply(objectMapper.writeValueAsString(logData));
-            } catch (final Exception e) {
-                printErr(timeStr, "Exception handling log message", getErrLogFormat(), e);
+            while(!close.get()) {
+                handleNextQueueRecord();
             }
         });
+    }
+
+    private static void handleNextQueueRecord() {
+        try {
+            final LogParams params = queue.poll(1, TimeUnit.SECONDS);
+            if (params == null) {
+                return;
+            }
+            final var timeStr = formatTime(params.dateTime);
+            final var logLevelConfig = loggerConfig.getLevels().get(String.valueOf(params.level));
+            final var outputType = getOutputType(logLevelConfig);
+            final var messageStr = getMessageAndStackTraceAsString(params.message, outputType.isPrintStackTrace());
+            final var formattedLogStr = formatLogLine(getFormat(logLevelConfig), timeStr, messageStr);
+            outputType.getOutput().println(formattedLogStr);
+            // multi-thread handling persisting log for higher throughput
+            asyncThreadPool.submit(() -> persistLogMessage(params, outputType, timeStr));
+        } catch (final Exception e) {
+            printErr(formatTime(LocalDateTime.now()), "Exception processing log queue", getErrLogFormat(), e);
+        }
+    }
+
+    private static void persistLogMessage(final LogParams params, final OutputType outputType, final String timeStr) {
+        try {
+            numberOfActiveAsyncThreads.incrementAndGet();
+            final var logData = new LogData(params.dateTime, getMessage(params.message), params.level,
+                    getStack(params.message, outputType.isPrintStackTrace()), params.host, params.source, getCode(params.message));
+            params.persistingFunction.apply(objectMapper.writeValueAsString(logData));
+        } catch (final Exception e) {
+            printErr(timeStr, "Exception handling log message", getErrLogFormat(), e);
+        } finally {
+            numberOfActiveAsyncThreads.decrementAndGet();
+        }
     }
 
     private static String formatTime(final LocalDateTime dateTime) {
@@ -163,7 +194,16 @@ public class Logger {
                 .replace(MESSAGE_PLACEHOLDER, message);
     }
 
+    @SneakyThrows
+    void waitAllThreads() {
+        while (numberOfActiveAsyncThreads.get() > 0) {
+            //noinspection BusyWait
+            Thread.sleep(1000);
+        }
+    }
+
     public void close() {
+        close.set(true);
         asyncThreadPool.shutdown();
         try {
             //noinspection ResultOfMethodCallIgnored
@@ -171,6 +211,16 @@ public class Logger {
         } catch (final Exception e) {
             printErr(formatTime(LocalDateTime.now()), "Exception when closing Logger", getErrLogFormat(), e);
         }
+    }
+
+    @AllArgsConstructor
+    private static class LogParams {
+        private final LocalDateTime dateTime;
+        private final int level;
+        private final Object message;
+        private final Function<String, Void> persistingFunction;
+        public final String host;
+        public final String source;
     }
 
 }

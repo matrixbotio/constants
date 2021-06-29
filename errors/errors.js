@@ -31,6 +31,8 @@ export const
     DATA_NO_ACCESS = _(-35040, "DATA_NO_ACCESS", "Data no acesss"),
     DATA_REQ_ERR = _(-35020, "DATA_REQ_ERR", "Data request error"),
     DATA_UNKNOWN = _(-35300, "DATA_UNKNOWN", "Data unknown"),
+    DATA_ENCODE_ERR = _(-35003, "DATA_ENCODE_ERR", "Data encode error"),
+    DATA_PARSE_ERR = _(-35002, "DATA_PARSE_ERR", "Data parse error"),
 
     USER_CRED_INVALID = _(-36300, "USER_CRED_INVALID", "User credentials invalid"),
     USER_DELETED = _(-36001, "USER_DELETED", "User deleted"),
@@ -45,9 +47,12 @@ export const
     USER_STATUS_INVALID = _(-36020, "USER_STATUS_INVALID", "User status invalid"),
 
     SERVICE_DISCONNECTED = _(-37100, "SERVICE_DISCONNECTED", "Service disconnected"),
-    SERVICE_NO_ACCESS = _(-37010, "SERVICE_NO_ACCESS", "No access"),
     SERVICE_REQ_FAILED = _(-37010, "SERVICE_REQ_FAILED", "Service request failed"),
+    SERVICE_NO_ACCESS = _(-37020, "SERVICE_NO_ACCESS", "No access"),
+    SERVICE_CONN_ERR = _(-37200, "SERVICE_CONN_ERR", "Failed to connect to the service"),
 
     NOTIFICATIONS_CONFIG_ERROR = _(-38010, "NOTIFICATIONS_CONFIG_ERROR", "Error configuring notifications"),
     NOTIFICATIONS_SAVE_EMAIL_ERROR = _(-38020, "NOTIFICATIONS_SAVE_EMAIL_ERROR", "Error saving email for notifications"),
-    NOTIFICATIONS_TELEGRAM_AUTH_ERROR = _(-38000, "NOTIFICATIONS_TELEGRAM_AUTH_ERROR", "Telegram user authentication error");
+    NOTIFICATIONS_TELEGRAM_AUTH_ERROR = _(-38000, "NOTIFICATIONS_TELEGRAM_AUTH_ERROR", "Telegram user authentication error"),
+
+    TASK_HANDLE_ERR = _(-39100, "TASK_HANDLE_ERR", "Task processing error");

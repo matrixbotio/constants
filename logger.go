@@ -42,7 +42,7 @@ type Logger struct {
 }
 
 func getSuitableDatetimeFormat(format string) (string, int){
-	return strings.NewReplacer("YYYY", "2006", "MM", "01", "DD", "02", "HH", "15", "mm", "04", "sss", "999", "ss", "05").Replace(format), utf8.RuneCountInString(format)
+	return strings.NewReplacer("YYYY", "2006", "MM", "01", "DD", "02", "HH", "15", "mm", "04", "ss", "05", "SSS", "999").Replace(format), utf8.RuneCountInString(format)
 }
 
 func getLogs(url string) map[string]interface{} {
@@ -83,22 +83,24 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 }
 
 func NewLogger(dev interface{}, host string, source string) *Logger {
-	format, formatLen := getSuitableDatetimeFormat(logConfig["&datetime_format"].(string))
+	format, formatLen := getSuitableDatetimeFormat(logConfig["datetime_format"].(string))
 	logLevels := make(map[string]*logLevelDesc)
-	for strlevel, element := range logConfig {
-		if level, err := strconv.Atoi(strlevel); err == nil {
-			if elMap, ok := element.(map[string]interface{}); ok {
-				logLevel := &logLevelDesc{
-					Level: level,
-					Stderr: false,
+	if levelsSection, ok := logConfig["levels"].(map[string]interface{}); ok {
+		for strlevel, element := range levelsSection {
+			if level, err := strconv.Atoi(strlevel); err == nil {
+				if elMap, ok := element.(map[string]interface{}); ok {
+					logLevel := &logLevelDesc{
+						Level: level,
+						Stderr: false,
+					}
+					if stderr, exists := elMap["stderr_format"]; exists {
+						logLevel.Stderr = true
+						logLevel.Format = stderr.(string)
+					} else if stdout, exists := elMap["stdout_format"]; exists {
+						logLevel.Format = stdout.(string)
+					}
+					logLevels[elMap["name"].(string)] = logLevel
 				}
-				if stderr, exists := elMap["stderr_format"]; exists {
-					logLevel.Stderr = true
-					logLevel.Format = stderr.(string)
-				} else if stdout, exists := elMap["stdout_format"]; exists {
-					logLevel.Format = stdout.(string)
-				}
-				logLevels[elMap["name"].(string)] = logLevel
 			}
 		}
 	}

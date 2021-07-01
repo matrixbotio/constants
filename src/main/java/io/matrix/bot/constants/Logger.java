@@ -2,14 +2,13 @@ package io.matrix.bot.constants;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.matrix.bot.constants.accessor.LogLevelAccessor;
 import io.matrix.bot.constants.model.LogData;
-import io.matrix.bot.constants.model.LogLevel;
 import io.matrix.bot.constants.model.LoggerConfig;
 import io.matrix.bot.constants.model.OutputType;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,7 +26,7 @@ public class Logger {
     public static final String LOG_LEVELS_JSON_URL = "https://raw.githubusercontent.com/matrixbotio/constants/master/logger/logger.json";
     private static final String TIME_PLACEHOLDER = "%datetime%";
     private static final String MESSAGE_PLACEHOLDER = "%message%";
-    private static final String DEFAULT_ERROR_LOG_LEVEL = "error";
+    private static final String ERROR_LOG_LEVEL_KEY = "4";
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final ExecutorService asyncThreadPool = Executors.newCachedThreadPool();
@@ -38,8 +37,9 @@ public class Logger {
     static {
         try {
             loggerConfig = objectMapper.readValue(new URL(LOG_LEVELS_JSON_URL), new TypeReference<>() {});
-        } catch (final IOException e) {
-            printErr(LocalDateTime.now().toString(), "Exception fetching Errors configuration JSON", getErrLogFormat(), e);
+            verifyLoggerConfig(loggerConfig);
+        } catch (final Exception e) {
+            printErr(LocalDateTime.now().toString(), "Exception fetching Errors configuration JSON", e);
         }
     }
 
@@ -48,7 +48,7 @@ public class Logger {
         try {
             dateTimeFormat = DateTimeFormatter.ofPattern(loggerConfig.getDatetimeFormat());
         } catch (final Exception e) {
-            printErr(LocalDateTime.now().toString(), "Exception creating date time format pattern", getErrLogFormat(), e);
+            printErr(LocalDateTime.now().toString(), "Exception creating date time format pattern", e);
         }
     }
 
@@ -94,9 +94,9 @@ public class Logger {
         final var logParams = new LogParams(LocalDateTime.now(), level, message, persistLogFunction, host, source);
         try {
             queue.add(logParams);
-        } catch (final IllegalStateException e) {
-            printErr(formatTime(LocalDateTime.now()), "Exception adding log message to the queue in log baseWriter",
-                    getErrLogFormat(), e);
+        } catch (final Exception e) {
+            printErr(LocalDateTime.now().format(dateTimeFormat), "Exception adding log message to the queue in log baseWriter",
+                    e);
         }
     }
 
@@ -114,16 +114,16 @@ public class Logger {
             if (params == null) {
                 return;
             }
-            final var timeStr = formatTime(params.dateTime);
+            final var timeStr = params.dateTime.format(dateTimeFormat);
             final var logLevelConfig = loggerConfig.getLevels().get(String.valueOf(params.level));
             final var outputType = getOutputType(logLevelConfig);
             final var messageStr = getMessageAndStackTraceAsString(params.message, outputType.isPrintStackTrace());
             final var formattedLogStr = formatLogLine(getFormat(logLevelConfig), timeStr, messageStr);
             outputType.getOutput().println(formattedLogStr);
-            // multi-thread handling persisting log for higher throughput
+            // multi-thread handler of persisting log for higher throughput
             asyncThreadPool.submit(() -> persistLogMessage(params, outputType, timeStr));
         } catch (final Exception e) {
-            printErr(formatTime(LocalDateTime.now()), "Exception processing log queue", getErrLogFormat(), e);
+            printErr(LocalDateTime.now().format(dateTimeFormat), "Exception processing log queue", e);
         }
     }
 
@@ -134,64 +134,61 @@ public class Logger {
                     getStack(params.message, outputType.isPrintStackTrace()), params.host, params.source, getCode(params.message));
             params.persistingFunction.apply(objectMapper.writeValueAsString(logData));
         } catch (final Exception e) {
-            printErr(timeStr, "Exception handling log message", getErrLogFormat(), e);
+            printErr(timeStr, "Exception handling log message", e);
         } finally {
             numberOfActiveAsyncThreads.decrementAndGet();
         }
     }
 
-    private static String formatTime(final LocalDateTime dateTime) {
-        try {
-            return dateTime.format(dateTimeFormat);
-        } catch (final Exception e) {
-            printErr(LocalDateTime.now().toString(), "Exception formatting time", getErrLogFormat(), e);
-            return dateTime.toString();
-        }
-    }
-
-    private static void printErr(final String time, final String format, final Exception e) {
-        printErr(time, "", format, e);
-    }
-
-    private static void printErr(final String time, final String errMsg, final String format, final Exception e) {
+    private static void printErr(final String time, final String errMsg, final Exception e) {
         final String msgAndStack = errMsg + "\n" + (e.getMessage() == null ? e.toString() : e.getMessage()) + "\n"
                 + formatStackTraceString(e.getStackTrace());
-        final var logLine = formatLogLine(format, time, msgAndStack);
+        final var logLine = formatLogLine(getErrLogFormat(), time, msgAndStack);
         System.err.println(logLine);
     }
 
     private static String getErrLogFormat() {
-        final var levels = loggerConfig.getLevels();
-        if (levels == null || levels.size() == 0) {
-            printErr(formatTime(LocalDateTime.now()), getErrLogFormat(),
-                    new RuntimeException("Exception getting error log format: log levels cannot be null or empty"));
-            return DEFAULT_ERROR_LOG_LEVEL;
-        }
-        final var logLevel = levels.lowerKey(levels.lastKey()) == null ? levels.get(levels.lastKey())
-                : levels.lowerEntry(levels.lastKey()).getValue();
-        final String format;
-        if (logLevel.getStderrFormat() != null && !logLevel.getStderrFormat().trim().isEmpty()) {
-            format = logLevel.getStderrFormat();
-        } else if (logLevel.getStdoutFormat() != null && !logLevel.getStdoutFormat().trim().isEmpty()) {
-            format = logLevel.getStdoutFormat();
-        } else {
-            printErr(formatTime(LocalDateTime.now()), getErrLogFormat(),
-                    new RuntimeException("Exception getting error log format: log level must contain either stdout either stderr format"));
-            return DEFAULT_ERROR_LOG_LEVEL;
-        }
-        return format;
+        final var logLevel = loggerConfig.getLevels().get(ERROR_LOG_LEVEL_KEY);
+        return LogLevelAccessor.getFormat(logLevel);
     }
 
     private static String formatLogLine(String format, final String time, final String message) {
-        if (!format.contains(TIME_PLACEHOLDER)) {
-            format = TIME_PLACEHOLDER + ": " + format;
-        }
-        if (!format.contains(MESSAGE_PLACEHOLDER)) {
-            format = format + " " + MESSAGE_PLACEHOLDER;
-        }
         return format
                 .replace(TIME_PLACEHOLDER, time)
                 .replace(MESSAGE_PLACEHOLDER, message);
+    }
+
+    private static void verifyLoggerConfig(final LoggerConfig loggerConfig) {
+        if (loggerConfig.getDatetimeFormat() == null) {
+            throw new RuntimeException("loggerConfig.dateTimeFormat cannot be null");
+        }
+        if (loggerConfig.getLevels() == null) {
+            throw new RuntimeException("loggerConfig.levels cannot be null");
+        }
+        for (int i=1; i<=5; ++i) {
+            final var logLevel = loggerConfig.getLevels().get(String.valueOf(i));
+            if (logLevel == null) {
+                throw new RuntimeException("loggerConfig.level should contain log level with key " + i);
+            }
+            final var name = logLevel.getName();
+            if (logLevel.getName() == null || logLevel.getName().isBlank()) {
+                throw new RuntimeException("loggerConfig.level with key " + i + " should contain a name");
+            }
+            final String format;
+            if (logLevel.getStdoutFormat() != null && !logLevel.getStdoutFormat().isBlank()) {
+                format = logLevel.getStdoutFormat();
+            } else if (logLevel.getStderrFormat() != null && !logLevel.getStderrFormat().isBlank()) {
+                format = logLevel.getStderrFormat();
+            } else {
+                throw new RuntimeException("loggerConfig.level with key " + i + " should contain either stdout or stderr format");
+            }
+            if (!format.contains(TIME_PLACEHOLDER)) {
+                throw new RuntimeException("loggerConfig.level with key " + i + " should contain a time placeholder in output format");
+            }
+            if (!format.contains(MESSAGE_PLACEHOLDER)) {
+                throw new RuntimeException("loggerConfig.level with key " + i + " should contain a time placeholder in output format");
+            }
+        }
     }
 
     @SneakyThrows
@@ -209,7 +206,7 @@ public class Logger {
             //noinspection ResultOfMethodCallIgnored
             asyncThreadPool.awaitTermination(30, TimeUnit.SECONDS);
         } catch (final Exception e) {
-            printErr(formatTime(LocalDateTime.now()), "Exception when closing Logger", getErrLogFormat(), e);
+            printErr(LocalDateTime.now().format(dateTimeFormat), "Exception when closing Logger", e);
         }
     }
 

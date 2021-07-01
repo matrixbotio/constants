@@ -9,8 +9,6 @@ public class MessageAccessor {
     public static String getMessage(final Object message) {
         if (message == null) {
             return "";
-        } else if (message instanceof String) {
-            return (String) message;
         } else if (message instanceof Error) {
             return ((Error) message).getMessage();
         } else {

@@ -11,7 +11,7 @@ import java.util.TreeMap;
 @Getter
 @Setter
 public class LoggerConfig {
-    @JsonProperty("datetime_format")
-    private String datetimeFormat;
-    private TreeMap<String, LogLevel> levels = new TreeMap<>();
+	@JsonProperty("datetime_format")
+	private String datetimeFormat;
+	private TreeMap<String, LogLevel> levels = new TreeMap<>();
 }

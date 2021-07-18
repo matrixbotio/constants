@@ -9,10 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LogLevel {
-    private String name;
-    private String description;
-    @JsonProperty("stdout_format")
-    private String stdoutFormat;
-    @JsonProperty("stderr_format")
-    private String stderrFormat;
+	private String name;
+	private String description;
+	@JsonProperty("stdout_format")
+	private String stdoutFormat;
+	@JsonProperty("stderr_format")
+	private String stderrFormat;
 }

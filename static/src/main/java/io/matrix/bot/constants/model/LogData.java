@@ -12,27 +12,27 @@ import static java.time.ZoneOffset.UTC;
 @Setter
 @NoArgsConstructor
 public class LogData {
-    private String source;
-    private String host;
-    private long timestamp;
-    private int level;
-    private String message;
-    private int code;
-    private String stack;
+	private String source;
+	private String host;
+	private long timestamp;
+	private int level;
+	private String message;
+	private int code;
+	private String stack;
 
-    public LogData(final LocalDateTime dateTime,
-                   final String message,
-                   final int level,
-                   final String stack,
-                   final String host,
-                   final String source,
-                   final int code) {
-        this.source = source;
-        this.host = host;
-        this.timestamp = dateTime.toInstant(UTC).toEpochMilli();
-        this.level = level;
-        this.message = message;
-        this.code = code;
-        this.stack = stack;
-    }
+	public LogData(final LocalDateTime dateTime,
+				   final String message,
+				   final int level,
+				   final String stack,
+				   final String host,
+				   final String source,
+				   final int code) {
+		this.source = source;
+		this.host = host;
+		this.timestamp = dateTime.toInstant(UTC).toEpochMilli();
+		this.level = level;
+		this.message = message;
+		this.code = code;
+		this.stack = stack;
+	}
 }

@@ -1,6 +1,9 @@
 package io.matrix.bot.constants;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ErrorsTest {
 
@@ -9,9 +12,9 @@ class ErrorsTest {
         // when
         final var error = Errors.getError("SERVICE_REQ_FAILED");
         // then
-        assert error.getCode() == -37010;
-        assert error.getMessage().equals("Service request failed");
-        assert error.getName().equals("SERVICE_REQ_FAILED");
+        assertEquals(-37010, error.getCode());
+        assertEquals("Service request failed", error.getMessage());
+        assertEquals("SERVICE_REQ_FAILED", error.getName());
     }
 
 }

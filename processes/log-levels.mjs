@@ -4,6 +4,7 @@ import { resolve } from 'path';
 import js from '../generators/log-levels-js.mjs';
 import json from '../generators/log-levels-json.mjs';
 import go from '../generators/log-levels-go.mjs';
+import java from '../generators/log-levels-java.mjs';
 
 const { readFile, writeFile, mkdir } = promises;
 
@@ -24,6 +25,7 @@ export default async () => {
 		js(structure),
 		json(structure),
 		go(structure),
+		java(structure),
 	]));
 	await Promise.all(Object.keys(targetFiles).map(file => writeFile(resolve(dest, file), targetFiles[file])));
 }

@@ -15,10 +15,7 @@ const configPath = process.env['INPUT_CONFIG-PATH'],
 const yamlFile = resolve(ghWorkspace, configPath, 'log-levels.yml');
 const yaml = readFile(yamlFile, 'utf8').then(YAML.parse);
 
-// destinations
-const dest = resolve(ghWorkspace, destPath, 'logger');
 export default async () => {
-	try{ await mkdir(dest) } catch(e){}
 	const structure = await yaml;
 	const targetFiles = Object.assign(...await Promise.all([
 		{},
@@ -27,5 +24,11 @@ export default async () => {
 		go(structure),
 		java(structure),
 	]));
-	await Promise.all(Object.keys(targetFiles).map(file => writeFile(resolve(dest, file), targetFiles[file])));
+	await Promise.all(Object.keys(targetFiles).map(async file => {
+		const dest = resolve(ghWorkspace, destPath, 'logger', file);
+		await mkdir(resolve(dest, '..'), {
+			recursive: true,
+		});
+		return writeFile(dest, targetFiles[file]);
+	}));
 }

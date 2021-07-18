@@ -11,21 +11,21 @@ import java.util.Map;
 
 public class Errors {
 
-    public static final String ERRORS_JSON_URL = "https://raw.githubusercontent.com/matrixbotio/constants/master/errors/errors.json";
+	public static final String ERRORS_JSON_URL = "https://raw.githubusercontent.com/matrixbotio/constants/master/errors/errors.json";
 
-    private static final Map<String, Error> errors = new HashMap<>();
+	private static final Map<String, Error> errors = new HashMap<>();
 
-    static {
-        try {
-            final Map<String, Error> errors = new ObjectMapper().readValue(new URL(ERRORS_JSON_URL), new TypeReference<>() {});
-            Errors.errors.putAll(errors);
-        } catch (final IOException e) {
-            throw new RuntimeException("Exception fetching Errors configuration JSON", e);
-        }
-    }
+	static {
+		try {
+			final Map<String, Error> errors = new ObjectMapper().readValue(new URL(ERRORS_JSON_URL), new TypeReference<>() {});
+			Errors.errors.putAll(errors);
+		} catch (final IOException e) {
+			throw new RuntimeException("Exception fetching Errors configuration JSON", e);
+		}
+	}
 
-    public static Error getError(final String errorName) {
-        return errors.get(errorName);
-    }
+	public static Error getError(final String errorName) {
+		return errors.get(errorName);
+	}
 
 }

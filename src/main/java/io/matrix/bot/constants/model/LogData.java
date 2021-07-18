@@ -21,12 +21,12 @@ public class LogData {
 	private String stack;
 
 	public LogData(final LocalDateTime dateTime,
-				   final String message,
-				   final int level,
-				   final String stack,
-				   final String host,
-				   final String source,
-				   final int code) {
+	               final String message,
+	               final int level,
+	               final String stack,
+	               final String host,
+	               final String source,
+	               final int code) {
 		this.source = source;
 		this.host = host;
 		this.timestamp = dateTime.toInstant(UTC).toEpochMilli();

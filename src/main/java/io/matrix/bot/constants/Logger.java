@@ -146,9 +146,7 @@ public class Logger {
 	}
 
 	private static void printErr(final String time, final String errMsg, final Exception e) {
-		final String msgAndStack = errMsg + "
-" + (e.getMessage() == null ? e.toString() : e.getMessage()) + "
-"
+		final String msgAndStack = errMsg + "\n" + (e.getMessage() == null ? e.toString() : e.getMessage()) + "\n"
 				+ formatStackTraceString(e.getStackTrace());
 		final var logLine = formatLogLine(getErrLogFormat(), time, msgAndStack);
 		System.err.println(logLine);

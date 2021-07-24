@@ -1,4 +1,4 @@
-module github.com/matrixbotio/constants
+module github.com/matrixbotio/constants-lib
 
 go 1.13
 

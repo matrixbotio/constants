@@ -95,7 +95,7 @@ public class Logger {
 	}
 
 	@SneakyThrows
-	private void baseWriter(final Object message, final int level) {
+	public void baseWriter(final Object message, final int level) {
 		final var logParams = new LogParams(LocalDateTime.now(), level, message, persistLogFunction, host, source);
 		try {
 			queue.add(logParams);

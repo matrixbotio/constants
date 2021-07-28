@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Error {
+
 	private int code;
 	private String name;
 	private String message;
@@ -22,4 +23,5 @@ public class Error {
 		this.name = name;
 		this.message = message;
 	}
+
 }

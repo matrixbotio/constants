@@ -16,21 +16,19 @@ public class MessageAccessor {
 		}
 	}
 
-	public static String getStack(final Object message, final boolean needStackTrace) {
+	public static String getStack(final Object message) {
 		if (message == null) {
 			return null;
 		} else if (message instanceof Error && ((Error) message).getStack() != null) {
 			return  ((Error) message).getStack();
-		} else if (needStackTrace) {
-			return formatStackTraceString(Thread.currentThread().getStackTrace());
 		} else {
 			return null;
 		}
 	}
 
-	public static String getMessageAndStackTraceAsString(final Object message, final boolean printStackTrace) {
+	public static String getMessageAndStackTraceAsString(final Object message) {
 		final var messageStr = getMessage(message);
-		final var stackTrace = getStack(message, printStackTrace);
+		final var stackTrace = getStack(message);
 		return stackTrace == null ? messageStr : messageStr + "\n" + stackTrace;
 	}
 

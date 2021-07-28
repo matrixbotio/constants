@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.matrix.bot.constants.model.Error;
 import io.matrix.bot.constants.model.LogData;
+ import io.matrix.bot.constants.model.MatrixException;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -45,18 +46,16 @@ class LoggerTest {
 		final var host = "mockedHost";
 		final var source = "mockedSource";
 		final var message = "Mocked message";
-		final var code = -3414;
 		final var blockingQueue = new ArrayBlockingQueue<String>(1);
 		final var logger = Logger.newLogger(s -> {
 			blockingQueue.add(s);
 			return null;
 		}, host, source);
 		// when
-		logger.error(new Error(code, "Mocked_Error", message));
+		logger.error(new MatrixException(message));
 		// then
 		final var logDataString = blockingQueue.poll(5, SECONDS);
 		final var logData = new ObjectMapper().readValue(logDataString, LogData.class);
-		assertEquals(code, logData.getCode());
 		assertEquals(host, logData.getHost());
 		assertEquals(4, logData.getLevel());
 		assertEquals(message, logData.getMessage());
@@ -88,7 +87,7 @@ class LoggerTest {
 		// given
 		final var host = "mockedHost";
 		final var source = "mockedSource";
-		final Object message = null;
+		final String message = null;
 		final var blockingQueue = new ArrayBlockingQueue<String>(1);
 		final var logger = Logger.newLogger(s -> {
 			blockingQueue.add(s);
@@ -120,7 +119,7 @@ class LoggerTest {
 			return null;
 		}, "host", "source");
 		for (int i=0; i<1000; ++i) {
-			logger.log(i);
+			logger.log(String.valueOf(i));
 		}
 		logger.waitAllThreads();
 	}

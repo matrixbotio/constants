@@ -3,11 +3,14 @@ package io.matrix.bot.constants;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.matrix.bot.constants.model.Error;
+import io.matrix.bot.constants.model.MatrixException;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.matrix.bot.constants.Util.formatStackTraceString;
 
 public class Errors {
 
@@ -26,6 +29,14 @@ public class Errors {
 
 	public static Error getError(final String errorName) {
 		return errors.get(errorName);
+	}
+
+	public static Error getError(MatrixException exception) {
+		var error = Errors.getError(exception.getErrorName());
+		error.setMessage(exception.getMessage());
+		var stack = formatStackTraceString(exception.getStackTrace());
+		error.setStack(stack);
+		return error;
 	}
 
 }

@@ -3,10 +3,14 @@ package io.matrix.bot.constants;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.matrix.bot.constants.accessor.LogLevelAccessor;
+import io.matrix.bot.constants.model.Error;
 import io.matrix.bot.constants.model.LogData;
 import io.matrix.bot.constants.model.LoggerConfig;
+import io.matrix.bot.constants.model.MatrixException;
 import io.matrix.bot.constants.model.OutputType;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 
 import java.net.URL;
@@ -17,10 +21,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import static io.matrix.bot.constants.Errors.getError;
 import static io.matrix.bot.constants.Util.formatStackTraceString;
 import static io.matrix.bot.constants.accessor.LogLevelAccessor.*;
 import static io.matrix.bot.constants.accessor.MessageAccessor.*;
 
+@Getter
+@Setter
 public class Logger {
 
 	public static final String LOG_LEVELS_JSON_URL = "https://raw.githubusercontent.com/matrixbotio/constants/master/logger/logger.json";
@@ -55,9 +62,14 @@ public class Logger {
 	// Used queue single-thread handler to print logs sequentially
 	private static final ArrayBlockingQueue<LogParams> queue = new ArrayBlockingQueue<>(100000);
 
-	private final Function<String, Void> persistLogFunction;
-	private final String host;
-	private final String source;
+	private Function<String, Void> persistLogFunction;
+	private String host;
+	private String source;
+	private int logLevel = 2;
+
+	private Logger() {
+
+	}
 
 	private Logger(final Function<String, Void> persistLogFunction, final String host, final String source) {
 		this.persistLogFunction = persistLogFunction;
@@ -65,37 +77,79 @@ public class Logger {
 		this.source = source;
 	}
 
+	public static Logger newLogger() {
+		return new Logger();
+	}
+
 	public static Logger newLogger(final Function<String, Void> persistLogFunction, final String host, final String source) {
 		return new Logger(persistLogFunction, host, source);
 	}
 
 	// Very detailed logs
-	public void verbose(final Object message) {
+	public void verbose(String message) {
 		baseWriter(message, 1);
 	}
 
+	// Very detailed logs
+	public void verbose(MatrixException exception) {
+		var error = getError(exception);
+		baseWriter(error, 1);
+	}
+
 	// Important logs
-	public void log(final Object message) {
+	public void log(String message) {
 		baseWriter(message, 2);
 	}
 
+	// Important logs
+	public void log(MatrixException exception) {
+		var error = getError(exception);
+		baseWriter(error, 2);
+	}
+
 	// Something may go wrong
-	public void warn(final Object message) {
+	public void warn(String message) {
 		baseWriter(message, 3);
 	}
 
+	// Something may go wrong
+	public void warn(MatrixException exception) {
+		var error = getError(exception);
+		baseWriter(error, 3);
+	}
+
 	// Failed to do something. This may cause problems!
-	public void error(final Object message) {
+	public void error(String message) {
 		baseWriter(message, 4);
 	}
 
+	// Failed to do something. This may cause problems!
+	public void error(MatrixException exception) {
+		var error = getError(exception);
+		baseWriter(error, 4);
+	}
+
 	// Critical error. Node's shutted down!
-	public void critical(final Object message) {
+	public void critical(String message) {
 		baseWriter(message, 5);
 	}
 
+	// Critical error. Node's shutted down!
+	public void critical(MatrixException exception) {
+		var error = getError(exception);
+		baseWriter(error, 5);
+	}
+
+	public void baseWriter(final Object message, final int level) {
+		baseWriter(message, level, true);
+	}
+
 	@SneakyThrows
-	private void baseWriter(final Object message, final int level) {
+	public void baseWriter(final Object message, final int level, boolean persistLog) {
+		if (level < this.logLevel) {
+			return;
+		}
+		var persistLogFunction = persistLog ? this.persistLogFunction : null;
 		final var logParams = new LogParams(LocalDateTime.now(), level, message, persistLogFunction, host, source);
 		try {
 			queue.add(logParams);
@@ -122,7 +176,7 @@ public class Logger {
 			final var timeStr = params.dateTime.format(dateTimeFormat);
 			final var logLevelConfig = loggerConfig.getLevels().get(String.valueOf(params.level));
 			final var outputType = getOutputType(logLevelConfig);
-			final var messageStr = getMessageAndStackTraceAsString(params.message, outputType.isPrintStackTrace());
+			final var messageStr = getMessageAndStackTraceAsString(params.message);
 			final var formattedLogStr = formatLogLine(getFormat(logLevelConfig), timeStr, messageStr);
 			outputType.getOutput().println(formattedLogStr);
 			// multi-thread handler of persisting log for higher throughput
@@ -135,9 +189,11 @@ public class Logger {
 	private static void persistLogMessage(final LogParams params, final OutputType outputType, final String timeStr) {
 		try {
 			numberOfActiveAsyncThreads.incrementAndGet();
-			final var logData = new LogData(params.dateTime, getMessage(params.message), params.level,
-					getStack(params.message, outputType.isPrintStackTrace()), params.host, params.source, getCode(params.message));
-			params.persistingFunction.apply(objectMapper.writeValueAsString(logData));
+			if (params.persistingFunction != null) {
+				final var logData = new LogData(params.dateTime, getMessage(params.message), params.level,
+						getStack(params.message), params.host, params.source, getCode(params.message));
+				params.persistingFunction.apply(objectMapper.writeValueAsString(logData));
+			}
 		} catch (final Exception e) {
 			printErr(timeStr, "Exception handling log message", e);
 		} finally {
@@ -146,9 +202,7 @@ public class Logger {
 	}
 
 	private static void printErr(final String time, final String errMsg, final Exception e) {
-		final String msgAndStack = errMsg + "
-" + (e.getMessage() == null ? e.toString() : e.getMessage()) + "
-"
+		final String msgAndStack = errMsg + "\n" + (e.getMessage() == null ? e.toString() : e.getMessage()) + "\n"
 				+ formatStackTraceString(e.getStackTrace());
 		final var logLine = formatLogLine(getErrLogFormat(), time, msgAndStack);
 		System.err.println(logLine);

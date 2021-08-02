@@ -242,7 +242,6 @@ export default struct => {
 		baseWriter(message, ${level});
 	}
 
-	// ${levels[level].description}
 	public void ${levels[level].name}(MatrixException exception) {
 		var error = getError(exception);
 		baseWriter(error, ${level});

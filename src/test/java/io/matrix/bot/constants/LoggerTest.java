@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.matrix.bot.constants.model.Error;
 import io.matrix.bot.constants.model.LogData;
- import io.matrix.bot.constants.model.MatrixException;
+import io.matrix.bot.constants.model.MatrixException;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ArrayBlockingQueue;

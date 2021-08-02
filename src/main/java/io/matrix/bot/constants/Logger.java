@@ -90,7 +90,6 @@ public class Logger {
 		baseWriter(message, 1);
 	}
 
-	// Very detailed logs
 	public void verbose(MatrixException exception) {
 		var error = getError(exception);
 		baseWriter(error, 1);
@@ -101,7 +100,6 @@ public class Logger {
 		baseWriter(message, 2);
 	}
 
-	// Important logs
 	public void log(MatrixException exception) {
 		var error = getError(exception);
 		baseWriter(error, 2);
@@ -112,7 +110,6 @@ public class Logger {
 		baseWriter(message, 3);
 	}
 
-	// Something may go wrong
 	public void warn(MatrixException exception) {
 		var error = getError(exception);
 		baseWriter(error, 3);
@@ -123,7 +120,6 @@ public class Logger {
 		baseWriter(message, 4);
 	}
 
-	// Failed to do something. This may cause problems!
 	public void error(MatrixException exception) {
 		var error = getError(exception);
 		baseWriter(error, 4);
@@ -134,7 +130,6 @@ public class Logger {
 		baseWriter(message, 5);
 	}
 
-	// Critical error. Node's shutted down!
 	public void critical(MatrixException exception) {
 		var error = getError(exception);
 		baseWriter(error, 5);

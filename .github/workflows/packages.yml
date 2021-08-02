@@ -1,9 +1,9 @@
 name: Packages
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types:
+      - published
 
 jobs:
   build:
@@ -23,12 +23,6 @@ jobs:
 
       - name: Build service
         run: mvn clean install -Dsurefire.useSystemClassLoader=false
-
-      - name: Extract tag names
-        id: tags
-        uses: actions/github-script@v4
-        with:
-          script: return context.payload.ref.replace(/^refs\/tags\/v/, '')
 
       - name: Publish package
         run: mvn --batch-mode deploy

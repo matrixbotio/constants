@@ -3,7 +3,7 @@ name: Packages
 on:
   release:
     types:
-      - published
+      - created
 
 jobs:
   java-package:

@@ -26,3 +26,5 @@ jobs:
 
       - name: Publish package
         run: mvn --batch-mode deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_CI_TOKEN }}

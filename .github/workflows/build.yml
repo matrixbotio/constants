@@ -57,6 +57,7 @@ jobs:
       - name: Create release
         uses: actions/github-script@v4
         with:
+          github-token: ${{ secrets.GH_CI_TOKEN }}
           script: |
             await github.repos.createRelease({
               owner: context.repo.owner,

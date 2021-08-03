@@ -55,8 +55,12 @@ jobs:
           echo Changes not found
 
       - name: Create release
-        uses: softprops/action-gh-release@v1
+        uses: actions/github-script@v4
         with:
-          tag_name: v${{ steps.generator.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_CI_TOKEN }}
+          script: |
+            await github.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: 'v${{ steps.generator.outputs.version }}',
+            });
+            console.log('Successfully created v${{ steps.generator.outputs.version }} release');

@@ -44,6 +44,11 @@
 		"message": "Invalid order",
 		"name": "BOT_ORDER_INVALID"
 	},
+	"BOT_ORDERS_NOT_FOUND": {
+		"code": -34030,
+		"message": "Bot orders not found",
+		"name": "BOT_ORDERS_NOT_FOUND"
+	},
 	"DATA_EMPTY": {
 		"code": -35200,
 		"message": "Data empty",

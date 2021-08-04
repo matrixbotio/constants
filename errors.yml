@@ -30,6 +30,9 @@ BOT:
   ORDER_INVALID:
     - -34020
     - Invalid order
+  ORDERS_NOT_FOUND:
+    - -34030
+    - Bot orders not found
 
 DATA:
   EMPTY:

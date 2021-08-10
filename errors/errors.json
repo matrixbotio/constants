@@ -209,6 +209,11 @@
 		"message": "Exception validating strategy stop message",
 		"name": "TIS_STRATEGY_STOP_MESSAGE_VALIDATION_ERR"
 	},
+	"TIS_FORMULA_VALIDATION_ERR": {
+		"code": -40102,
+		"message": "Exception validating formula",
+		"name": "TIS_FORMULA_VALIDATION_ERR"
+	},
 	"TIS_STRATEGY_NOT_FOUND": {
 		"code": -40404,
 		"message": "Strategy not found with parameters",

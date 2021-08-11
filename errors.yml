@@ -130,3 +130,19 @@ TASK:
   HANDLE_ERR:
     - -39100
     - Task processing error
+
+STRATEGY:
+  START_MESSAGE_VALIDATION_ERR:
+    - -40100
+    - Exception validating strategy start message
+  STOP_MESSAGE_VALIDATION_ERR:
+    - -40101
+    - Exception validating strategy stop message
+  NOT_FOUND:
+    - -40404
+    - Strategy not found with parameters
+
+FORMULA:
+  VALIDATION_ERR:
+    - -40102
+    - Exception validating formula

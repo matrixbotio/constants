@@ -193,5 +193,25 @@
 		"code": -39100,
 		"message": "Task processing error",
 		"name": "TASK_HANDLE_ERR"
+	},
+	"STRATEGY_START_MESSAGE_VALIDATION_ERR": {
+		"code": -40100,
+		"message": "Exception validating strategy start message",
+		"name": "STRATEGY_START_MESSAGE_VALIDATION_ERR"
+	},
+	"STRATEGY_STOP_MESSAGE_VALIDATION_ERR": {
+		"code": -40101,
+		"message": "Exception validating strategy stop message",
+		"name": "STRATEGY_STOP_MESSAGE_VALIDATION_ERR"
+	},
+	"STRATEGY_NOT_FOUND": {
+		"code": -40404,
+		"message": "Strategy not found with parameters",
+		"name": "STRATEGY_NOT_FOUND"
+	},
+	"FORMULA_VALIDATION_ERR": {
+		"code": -40102,
+		"message": "Exception validating formula",
+		"name": "FORMULA_VALIDATION_ERR"
 	}
 }

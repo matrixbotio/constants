@@ -48,4 +48,10 @@ export const
     NOTIFICATIONS_SAVE_EMAIL_ERROR = _(-38020, "NOTIFICATIONS_SAVE_EMAIL_ERROR", "Error saving email for notifications"),
     NOTIFICATIONS_TELEGRAM_AUTH_ERROR = _(-38000, "NOTIFICATIONS_TELEGRAM_AUTH_ERROR", "Telegram user authentication error"),
 
-    TASK_HANDLE_ERR = _(-39100, "TASK_HANDLE_ERR", "Task processing error");
+    TASK_HANDLE_ERR = _(-39100, "TASK_HANDLE_ERR", "Task processing error"),
+
+    STRATEGY_START_MESSAGE_VALIDATION_ERR = _(-40100, "STRATEGY_START_MESSAGE_VALIDATION_ERR", "Exception validating strategy start message"),
+    STRATEGY_STOP_MESSAGE_VALIDATION_ERR = _(-40101, "STRATEGY_STOP_MESSAGE_VALIDATION_ERR", "Exception validating strategy stop message"),
+    STRATEGY_NOT_FOUND = _(-40404, "STRATEGY_NOT_FOUND", "Strategy not found with parameters"),
+
+    FORMULA_VALIDATION_ERR = _(-40102, "FORMULA_VALIDATION_ERR", "Exception validating formula");

@@ -1,5 +1,7 @@
 package io.matrix.bot.constants.model;
 
+import io.matrix.bot.constants.Errors;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +10,7 @@ import lombok.Setter;
 public class MatrixException extends RuntimeException {
 
     private String errorName = "BASE_INTERNAL_ERROR";
+    private int code = -32603;
 
     public MatrixException() {
     }
@@ -18,7 +21,7 @@ public class MatrixException extends RuntimeException {
 
     public MatrixException(String errorName, String message) {
         super(message);
-        this.errorName = errorName;
+        setErrorNameAndCode(errorName);
     }
 
     public MatrixException(String message, Throwable cause) {
@@ -27,7 +30,15 @@ public class MatrixException extends RuntimeException {
 
     public MatrixException(String errorName, String message, Throwable cause) {
         super(message, cause);
+        setErrorNameAndCode(errorName);
+    }
+
+    private void setErrorNameAndCode(String errorName) {
         this.errorName = errorName;
+        var error = Errors.getError(errorName);
+        if (error != null) {
+            code = error.getCode();
+        }
     }
 
 }

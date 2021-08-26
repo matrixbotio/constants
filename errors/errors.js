@@ -23,6 +23,7 @@ export const
     BOT_NOT_FOUND = _(-34100, "BOT_NOT_FOUND", "Bot not found"),
     BOT_ORDER_INVALID = _(-34020, "BOT_ORDER_INVALID", "Invalid order"),
     BOT_ORDERS_NOT_FOUND = _(-34030, "BOT_ORDERS_NOT_FOUND", "Bot orders not found"),
+    BOT_LAP_FINISHED = _(-34040, "BOT_LAP_FINISHED", "Bot lap finished"),
 
     DATA_EMPTY = _(-35200, "DATA_EMPTY", "Data empty"),
     DATA_EXISTS = _(-35030, "DATA_EXISTS", "Data exists"),

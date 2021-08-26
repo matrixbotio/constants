@@ -49,6 +49,11 @@
 		"message": "Bot orders not found",
 		"name": "BOT_ORDERS_NOT_FOUND"
 	},
+	"BOT_LAP_FINISHED": {
+		"code": -34040,
+		"message": "Bot lap finished",
+		"name": "BOT_LAP_FINISHED"
+	},
 	"DATA_EMPTY": {
 		"code": -35200,
 		"message": "Data empty",

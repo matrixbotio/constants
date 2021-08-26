@@ -33,6 +33,9 @@ BOT:
   ORDERS_NOT_FOUND:
     - -34030
     - Bot orders not found
+  LAP_FINISHED:
+    - -34040
+    - Bot lap finished
 
 DATA:
   EMPTY:

@@ -67,7 +67,6 @@ export default class Logger{
 			level: 1,
 			timestamp: this.#ts(now),
 		}, getBaseLogData(message));
-		if(stack) sendObj.stack = stack;
 		this.#dev.send(JSON.stringify(sendObj));
 	}
 `.slice(1);

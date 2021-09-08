@@ -179,6 +179,11 @@
 		"message": "Failed to connect to the service",
 		"name": "SERVICE_CONN_ERR"
 	},
+	"SERVICE_REQ_TIMEOUT": {
+		"code": -37300,
+		"message": "Service request timeout",
+		"name": "SERVICE_REQ_TIMEOUT"
+	},
 	"NOTIFICATIONS_CONFIG_ERROR": {
 		"code": -38010,
 		"message": "Error configuring notifications",

@@ -44,6 +44,7 @@ export const
     SERVICE_REQ_FAILED = _(-37010, "SERVICE_REQ_FAILED", "Service request failed"),
     SERVICE_NO_ACCESS = _(-37020, "SERVICE_NO_ACCESS", "No access"),
     SERVICE_CONN_ERR = _(-37200, "SERVICE_CONN_ERR", "Failed to connect to the service"),
+    SERVICE_REQ_TIMEOUT = _(-37300, "SERVICE_REQ_TIMEOUT", "Service request timeout"),
 
     NOTIFICATIONS_CONFIG_ERROR = _(-38010, "NOTIFICATIONS_CONFIG_ERROR", "Error configuring notifications"),
     NOTIFICATIONS_SAVE_EMAIL_ERROR = _(-38020, "NOTIFICATIONS_SAVE_EMAIL_ERROR", "Error saving email for notifications"),

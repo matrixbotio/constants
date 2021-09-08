@@ -117,6 +117,9 @@ SERVICE:
   CONN_ERR:
     - -37200
     - Failed to connect to the service
+  REQ_TIMEOUT:
+    - -37300
+    - Service request timeout
 
 NOTIFICATIONS:
   CONFIG_ERROR:

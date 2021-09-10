@@ -58,13 +58,13 @@ export default class Logger{
 		return Math.floor(date / 1000);
 	}
 
-	#log(message, writer, format){
+	#log(message, writer, format, level){
 		const now = new Date;
 		writer.write(applyFormat(format, now, message) + nl);
 		const sendObj = Object.assign({
 			source: this.#source,
 			host: this.#host,
-			level: 1,
+			level,
 			timestamp: this.#ts(now),
 		}, getBaseLogData(message));
 		this.#dev.send(JSON.stringify(sendObj));
@@ -91,7 +91,7 @@ export default struct => {
 			const format = stdout_format ? stdout_format : stderr_format;
 			js += `
 	${name}(message){
-		this.#log(message, process.${stdout_format ? 'stdout' : 'stderr'}, ${JSON.stringify(format)});
+		this.#log(message, process.${stdout_format ? 'stdout' : 'stderr'}, ${JSON.stringify(format)}, ${code});
 	}
 `;
 			ts += `

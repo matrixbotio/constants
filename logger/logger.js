@@ -57,35 +57,35 @@ export default class Logger{
 		return Math.floor(date / 1000);
 	}
 
-	#log(message, writer, format){
+	#log(message, writer, format, level){
 		const now = new Date;
 		writer.write(applyFormat(format, now, message) + nl);
 		const sendObj = Object.assign({
 			source: this.#source,
 			host: this.#host,
-			level: 1,
+			level,
 			timestamp: this.#ts(now),
 		}, getBaseLogData(message));
 		this.#dev.send(JSON.stringify(sendObj));
 	}
 
 	verbose(message){
-		this.#log(message, process.stdout, "\u001b[37;1m[%datetime%] \u001b[36;1mInfo:\u001b[0m %message%");
+		this.#log(message, process.stdout, "\u001b[37;1m[%datetime%] \u001b[36;1mInfo:\u001b[0m %message%", 1);
 	}
 
 	log(message){
-		this.#log(message, process.stdout, "\u001b[37;1m[%datetime%] \u001b[32;1mInfo:\u001b[0m %message%");
+		this.#log(message, process.stdout, "\u001b[37;1m[%datetime%] \u001b[32;1mInfo:\u001b[0m %message%", 2);
 	}
 
 	warn(message){
-		this.#log(message, process.stderr, "\u001b[37;1m[%datetime%] \u001b[33;1mWarning:\u001b[0m %message%");
+		this.#log(message, process.stderr, "\u001b[37;1m[%datetime%] \u001b[33;1mWarning:\u001b[0m %message%", 3);
 	}
 
 	error(message){
-		this.#log(message, process.stderr, "\u001b[37;1m[%datetime%] \u001b[31;1mERROR:\u001b[0m %message%");
+		this.#log(message, process.stderr, "\u001b[37;1m[%datetime%] \u001b[31;1mERROR:\u001b[0m %message%", 4);
 	}
 
 	critical(message){
-		this.#log(message, process.stderr, "\u001b[37;1m[%datetime%] \u001b[35;1mCRITICAL:\u001b[0m %message%");
+		this.#log(message, process.stderr, "\u001b[37;1m[%datetime%] \u001b[35;1mCRITICAL:\u001b[0m %message%", 5);
 	}
 }

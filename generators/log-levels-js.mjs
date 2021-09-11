@@ -47,20 +47,22 @@ export default class Logger{
 	#dev
 	#host
 	#source
+	#consoleWriter
 
-	constructor(dev, host, source){
+	constructor(dev, host, source, consoleWriter){
 		this.#dev = dev;
 		this.#host = host;
 		this.#source = source;
+		this.#consoleWriter = consoleWriter || import('process');
 	}
 
 	#ts(date){
 		return Math.floor(date / 1000);
 	}
 
-	#log(message, writer, format, level){
+	async #log(message, writer, format, level){
 		const now = new Date;
-		writer.write(applyFormat(format, now, message) + nl);
+		(await this.#consoleWriter)[writer].write(applyFormat(format, now, message) + nl);
 		const sendObj = Object.assign({
 			source: this.#source,
 			host: this.#host,
@@ -76,8 +78,17 @@ interface OutputDevice{
 	send(data: string): void
 }
 
+interface ConsoleWriter{
+	write(data: string): void
+}
+
+interface ConsoleDevice{
+	stdout: ConsoleWriter
+	stderr: ConsoleWriter
+}
+
 export default class Logger{
-	constructor(dev: OutputDevice, host: string, source: string)
+	constructor(dev: OutputDevice, host: string, source: string, consoleDevice?: ConsoleDevice | Promise<ConsoleDevice>)
 `.slice(1);
 
 export default struct => {
@@ -91,7 +102,7 @@ export default struct => {
 			const format = stdout_format ? stdout_format : stderr_format;
 			js += `
 	${name}(message){
-		this.#log(message, process.${stdout_format ? 'stdout' : 'stderr'}, ${JSON.stringify(format)}, ${code});
+		this.#log(message, ${JSON.stringify(stdout_format ? 'stdout' : 'stderr')}, ${JSON.stringify(format)}, ${code});
 	}
 `;
 			ts += `

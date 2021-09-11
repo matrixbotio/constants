@@ -2,8 +2,17 @@ interface OutputDevice{
 	send(data: string): void
 }
 
+interface ConsoleWriter{
+	write(data: string): void
+}
+
+interface ConsoleDevice{
+	stdout: ConsoleWriter
+	stderr: ConsoleWriter
+}
+
 export default class Logger{
-	constructor(dev: OutputDevice, host: string, source: string)
+	constructor(dev: OutputDevice, host: string, source: string, consoleDevice?: ConsoleDevice | Promise<ConsoleDevice>)
 
 	/**
 	 * Very detailed logs

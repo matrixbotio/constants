@@ -56,10 +56,6 @@ export default class Logger{
 		this.#consoleWriter = consoleWriter || import('process');
 	}
 
-	#ts(date){
-		return Math.floor(date / 1000);
-	}
-
 	async #log(message, writer, format, level){
 		const now = new Date;
 		(await this.#consoleWriter)[writer].write(applyFormat(format, now, message) + nl);
@@ -67,7 +63,7 @@ export default class Logger{
 			source: this.#source,
 			host: this.#host,
 			level,
-			timestamp: this.#ts(now),
+			timestamp: +now,
 		}, getBaseLogData(message));
 		this.#dev.send(JSON.stringify(sendObj));
 	}

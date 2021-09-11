@@ -59,7 +59,7 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 	sendObj := &sendMessageFormat{
 		Source: l.Source,
 		Host: l.Host,
-		Timestamp: now.Unix(),
+		Timestamp: int64(now.UnixNano() / (int64(time.Millisecond) / int64(time.Nanosecond))),
 		Level: level,
 	}
 	if msg, ok := message.(string); ok {

@@ -1,12 +1,14 @@
 package constants
 
 import (
-	"github.com/go-stack/stack"
 	"strings"
+
+	"github.com/go-stack/stack"
 )
 
 const errStackJoin = "\n    at "
 
+// APIError - error data container
 type APIError struct {
 	Message string `json:"message"`
 	Code    int    `json:"code"`
@@ -24,7 +26,7 @@ func getStack() string {
 	rt := stack.Trace().TrimRuntime()
 	rt = rt[3:]
 	str := rt.String()
-	str = str[1:len(str)-1]
+	str = str[1 : len(str)-1]
 	arr := strings.Split(str, " ")
 	return errStackJoin[1:] + strings.Join(arr, errStackJoin)
 }
@@ -40,6 +42,7 @@ func err(code int, name string, msg string) *APIError {
 
 var errors = getErrors("https://raw.githubusercontent.com/matrixbotio/constants/master/errors/errors.json")
 
+// Error - create new error
 func Error(name string, message ...string) *APIError {
 	if res, exists := errors[name]; exists {
 		if len(message) > 1 {

@@ -42,7 +42,7 @@ var errors = getErrors("https://raw.githubusercontent.com/matrixbotio/constants/
 
 func Error(name string, message ...string) *APIError {
 	if res, exists := errors[name]; exists {
-		if len(message) > 1 {
+		if len(message) > 0 {
 			return err(res.Code, res.Name, message[0])
 		}
 		return err(res.Code, res.Name, res.Message)

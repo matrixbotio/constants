@@ -32,6 +32,7 @@ type logLevelDesc struct {
 	Level  int
 }
 
+// Logger - cool thing to process logs
 type Logger struct {
 	Dev         logDevice
 	Host        string
@@ -82,6 +83,7 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 	l.Dev.Send(string(r))
 }
 
+// NewLogger - create new logger
 func NewLogger(dev interface{}, host string, source string) *Logger {
 	format, formatLen := getSuitableDatetimeFormat(logConfig["datetime_format"].(string))
 	logLevels := make(map[string]*logLevelDesc)
@@ -114,11 +116,12 @@ func NewLogger(dev interface{}, host string, source string) *Logger {
 	}
 }
 
+// AwaitLoggers - wait for all the logs to be recorded
 func AwaitLoggers() {
 	wg.Wait()
 }
 
-// Very detailed logs
+// Verbose - very detailed logs
 func (l *Logger) Verbose(message interface{}) {
 	logLevel := l.LogLevels["verbose"]
 	output := os.Stdout
@@ -129,7 +132,7 @@ func (l *Logger) Verbose(message interface{}) {
 	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
 }
 
-// Important logs
+// Log - important logs
 func (l *Logger) Log(message interface{}) {
 	logLevel := l.LogLevels["log"]
 	output := os.Stdout
@@ -140,7 +143,7 @@ func (l *Logger) Log(message interface{}) {
 	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
 }
 
-// Something may go wrong
+// Warn - something may go wrong
 func (l *Logger) Warn(message interface{}) {
 	logLevel := l.LogLevels["warn"]
 	output := os.Stdout
@@ -151,7 +154,7 @@ func (l *Logger) Warn(message interface{}) {
 	go l.baseWriter(message, output, logLevel.Format, logLevel.Level)
 }
 
-// Failed to do something. This may cause problems!
+// Error - failed to do something. This may cause problems!
 func (l *Logger) Error(message interface{}) {
 	logLevel := l.LogLevels["error"]
 	output := os.Stdout

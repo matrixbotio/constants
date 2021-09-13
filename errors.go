@@ -44,11 +44,13 @@ var errors = getErrors("https://raw.githubusercontent.com/matrixbotio/constants/
 
 // Error - create new error
 func Error(name string, message ...string) *APIError {
-	if res, exists := errors[name]; exists {
-		if len(message) > 1 {
-			return err(res.Code, res.Name, message[0])
-		}
-		return err(res.Code, res.Name, res.Message)
+	errRes, errorIsKnown := errors[name]
+	if !errorIsKnown {
+		return err(-1, "ERR_UNKNOWN", "Cannot get error named "+name)
 	}
-	return err(-1, "ERR_UNKNOWN", "Cannot get error named "+name)
+
+	if len(message) > 0 {
+		return err(errRes.Code, errRes.Name, message[0])
+	}
+	return err(errRes.Code, errRes.Name, errRes.Message)
 }

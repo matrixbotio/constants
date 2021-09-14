@@ -25,6 +25,7 @@ import static io.matrix.bot.constants.Errors.getError;
 import static io.matrix.bot.constants.Util.formatStackTraceString;
 import static io.matrix.bot.constants.accessor.LogLevelAccessor.*;
 import static io.matrix.bot.constants.accessor.MessageAccessor.*;
+import static java.time.ZoneOffset.UTC;
 
 @Getter
 @Setter
@@ -66,23 +67,25 @@ public class Logger {
 	private String host;
 	private String source;
 	private int logLevel = 2;
+	private String env;
 
 	private Logger() {
 
 	}
 
-	private Logger(final Function<String, Void> persistLogFunction, final String host, final String source) {
+	private Logger(Function<String, Void> persistLogFunction, String host, String source, String env) {
 		this.persistLogFunction = persistLogFunction;
 		this.host = host;
 		this.source = source;
+		this.env = env;
 	}
 
 	public static Logger newLogger() {
 		return new Logger();
 	}
 
-	public static Logger newLogger(final Function<String, Void> persistLogFunction, final String host, final String source) {
-		return new Logger(persistLogFunction, host, source);
+	public static Logger newLogger(Function<String, Void> persistLogFunction, String host, String source, String env) {
+		return new Logger(persistLogFunction, host, source, env);
 	}
 
 	// Very detailed logs
@@ -145,7 +148,7 @@ public class Logger {
 			return;
 		}
 		var persistLogFunction = persistLog ? this.persistLogFunction : null;
-		final var logParams = new LogParams(LocalDateTime.now(), level, message, persistLogFunction, host, source);
+		final var logParams = new LogParams(LocalDateTime.now(), level, message, persistLogFunction, host, source, env);
 		try {
 			queue.add(logParams);
 		} catch (final Exception e) {
@@ -185,8 +188,8 @@ public class Logger {
 		try {
 			numberOfActiveAsyncThreads.incrementAndGet();
 			if (params.persistingFunction != null) {
-				final var logData = new LogData(params.dateTime, getMessage(params.message), params.level,
-						getStack(params.message), params.host, params.source, getCode(params.message));
+				final var logData = new LogData(params.source, params.host, params.dateTime.toInstant(UTC).toEpochMilli(),
+						params.level, getMessage(params.message), getCode(params.message), getStack(params.message), params.env);
 				params.persistingFunction.apply(objectMapper.writeValueAsString(logData));
 			}
 		} catch (final Exception e) {
@@ -274,6 +277,7 @@ public class Logger {
 		private final Function<String, Void> persistingFunction;
 		public final String host;
 		public final String source;
+		public final String env;
 	}
 
 }

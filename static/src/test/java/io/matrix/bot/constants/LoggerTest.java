@@ -17,19 +17,20 @@ class LoggerTest {
 	@Test
 	public void should_successfully_handle_log() throws JsonProcessingException, InterruptedException {
 		// given
-		final var host = "mockedHost";
-		final var source = "mockedSource";
-		final var message = "Mocked message";
-		final var blockingQueue = new ArrayBlockingQueue<String>(1);
-		final var logger = Logger.newLogger(s -> {
+		var host = "mockedHost";
+		var source = "mockedSource";
+		var message = "Mocked message";
+		var env = "local";
+		var blockingQueue = new ArrayBlockingQueue<String>(1);
+		var logger = Logger.newLogger(s -> {
 			blockingQueue.add(s);
 			return null;
-		}, host, source);
+		}, host, source, env);
 		// when
 		logger.log(message);
 		// then
-		final var logDataString = blockingQueue.poll(5, SECONDS);
-		final var logData = new ObjectMapper().readValue(logDataString, LogData.class);
+		var logDataString = blockingQueue.poll(5, SECONDS);
+		var logData = new ObjectMapper().readValue(logDataString, LogData.class);
 		assertEquals(0, logData.getCode());
 		assertEquals(host, logData.getHost());
 		assertEquals(2, logData.getLevel());
@@ -43,19 +44,20 @@ class LoggerTest {
 	@Test
 	public void should_successfully_handle_error() throws JsonProcessingException, InterruptedException {
 		// given
-		final var host = "mockedHost";
-		final var source = "mockedSource";
-		final var message = "Mocked message";
-		final var blockingQueue = new ArrayBlockingQueue<String>(1);
-		final var logger = Logger.newLogger(s -> {
+		var host = "mockedHost";
+		var source = "mockedSource";
+		var message = "Mocked message";
+		var env = "local";
+		var blockingQueue = new ArrayBlockingQueue<String>(1);
+		var logger = Logger.newLogger(s -> {
 			blockingQueue.add(s);
 			return null;
-		}, host, source);
+		}, host, source, env);
 		// when
 		logger.error(new MatrixException(message));
 		// then
-		final var logDataString = blockingQueue.poll(5, SECONDS);
-		final var logData = new ObjectMapper().readValue(logDataString, LogData.class);
+		var logDataString = blockingQueue.poll(5, SECONDS);
+		var logData = new ObjectMapper().readValue(logDataString, LogData.class);
 		assertEquals(host, logData.getHost());
 		assertEquals(4, logData.getLevel());
 		assertEquals(message, logData.getMessage());
@@ -68,13 +70,14 @@ class LoggerTest {
 	@Test
 	public void should_handle_persisting_exception() throws InterruptedException {
 		// given
-		final var host = "mockedHost";
-		final var source = "mockedSource";
-		final var blockingQueue = new ArrayBlockingQueue<String>(1);
-		final var logger = Logger.newLogger(s -> {
+		var host = "mockedHost";
+		var source = "mockedSource";
+		var env = "local";
+		var blockingQueue = new ArrayBlockingQueue<String>(1);
+		var logger = Logger.newLogger(s -> {
 			blockingQueue.add(s);
 			throw new RuntimeException("Test");
-		}, host, source);
+		}, host, source, env);
 		// when
 		logger.log("Test message");
 		// then
@@ -85,19 +88,20 @@ class LoggerTest {
 	@Test
 	public void should_handle_null_log_message() throws JsonProcessingException, InterruptedException {
 		// given
-		final var host = "mockedHost";
-		final var source = "mockedSource";
-		final String message = null;
-		final var blockingQueue = new ArrayBlockingQueue<String>(1);
-		final var logger = Logger.newLogger(s -> {
+		var host = "mockedHost";
+		var source = "mockedSource";
+		var env = "local";
+		String message = null;
+		var blockingQueue = new ArrayBlockingQueue<String>(1);
+		var logger = Logger.newLogger(s -> {
 			blockingQueue.add(s);
 			return null;
-		}, host, source);
+		}, host, source, env);
 		// when
 		logger.log(message);
 		// then
-		final var logDataString = blockingQueue.poll(5, SECONDS);
-		final var logData = new ObjectMapper().readValue(logDataString, LogData.class);
+		var logDataString = blockingQueue.poll(5, SECONDS);
+		var logData = new ObjectMapper().readValue(logDataString, LogData.class);
 		assertEquals(0, logData.getCode());
 		assertEquals(host, logData.getHost());
 		assertEquals(2, logData.getLevel());
@@ -110,14 +114,14 @@ class LoggerTest {
 
 	@Test
 	public void should_handle_many_messages() {
-		final var logger = Logger.newLogger(s -> {
+		var logger = Logger.newLogger(s -> {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			return null;
-		}, "host", "source");
+		}, "host", "source", "local");
 		for (int i=0; i<1000; ++i) {
 			logger.log(String.valueOf(i));
 		}

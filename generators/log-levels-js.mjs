@@ -48,15 +48,20 @@ export default class Logger{
 	#host
 	#source
 	#consoleWriter
+	#pendingWrites
+	#finishedPendingWritesCallbacks
 
 	constructor(dev, host, source, consoleWriter){
 		this.#dev = dev;
 		this.#host = host;
 		this.#source = source;
-		this.#consoleWriter = consoleWriter || import('process');
+		this.#consoleWriter = consoleWriter;
+		this.#pendingWrites = 0;
+		this.#finishedPendingWritesCallbacks = [];
 	}
 
 	async #log(message, writer, format, level){
+		this.#pendingWrites++;
 		const now = new Date;
 		(await this.#consoleWriter)[writer].write(applyFormat(format, now, message) + nl);
 		const sendObj = Object.assign({
@@ -65,7 +70,19 @@ export default class Logger{
 			level,
 			timestamp: +now,
 		}, getBaseLogData(message));
-		this.#dev.send(JSON.stringify(sendObj));
+		await this.#dev.send(JSON.stringify(sendObj));
+		if(!--this.#pendingWrites){
+			const callbacks = this.#finishedPendingWritesCallbacks;
+			this.#finishedPendingWritesCallbacks = [];
+			callbacks.forEach(cb => cb());
+		}
+	}
+
+	finishedPendingWrites(){
+		return new Promise(r => {
+			if(!this.#pendingWrites) return r();
+			this.#finishedPendingWritesCallbacks.push(r);
+		});
 	}
 `.slice(1);
 

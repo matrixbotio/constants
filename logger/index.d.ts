@@ -14,6 +14,8 @@ interface ConsoleDevice{
 export default class Logger{
 	constructor(dev: OutputDevice, host: string, source: string, consoleDevice?: ConsoleDevice | Promise<ConsoleDevice>)
 
+	finishedPendingWrites(): Promise<void>
+
 	/**
 	 * Very detailed logs
 	 */

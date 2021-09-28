@@ -49,18 +49,21 @@ class LoggerTest {
 		var message = "Mocked message";
 		var env = "local";
 		var blockingQueue = new ArrayBlockingQueue<String>(1);
+		var matrixException = new MatrixException(message);
 		var logger = Logger.newLogger(s -> {
 			blockingQueue.add(s);
 			return null;
 		}, host, source, env);
+
 		// when
-		logger.error(new MatrixException(message));
+		logger.error(matrixException);
+
 		// then
 		var logDataString = blockingQueue.poll(5, SECONDS);
 		var logData = new ObjectMapper().readValue(logDataString, LogData.class);
 		assertEquals(host, logData.getHost());
 		assertEquals(4, logData.getLevel());
-		assertEquals(message, logData.getMessage());
+		assertEquals(matrixException.toString(), logData.getMessage());
 		assertEquals(source, logData.getSource());
 		assertNotNull(logData.getStack());
 		assertTrue(logData.getTimestamp() > 0L);

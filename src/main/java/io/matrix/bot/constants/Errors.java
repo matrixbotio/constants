@@ -33,8 +33,8 @@ public class Errors {
 
 	public static Error getError(MatrixException exception) {
 		var error = Errors.getError(exception.getErrorName());
-		error.setMessage(exception.getMessage());
-		var stack = formatStackTraceString(exception.getStackTrace());
+		error.setMessage(exception.toString());
+		var stack = formatStackTraceString(exception.getStackTrace(), exception.getCause());
 		error.setStack(stack);
 		return error;
 	}

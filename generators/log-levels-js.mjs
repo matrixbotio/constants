@@ -102,6 +102,8 @@ interface ConsoleDevice{
 
 export default class Logger{
 	constructor(dev: OutputDevice, host: string, source: string, consoleDevice?: ConsoleDevice | Promise<ConsoleDevice>)
+
+	finishedPendingWrites(): Promise<void>
 `.slice(1);
 
 export default struct => {

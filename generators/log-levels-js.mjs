@@ -70,7 +70,7 @@ export default class Logger{
 			level,
 			timestamp: +now,
 		}, getBaseLogData(message));
-		await this.#dev.send(JSON.stringify(sendObj));
+		try{ await this.#dev.send(JSON.stringify(sendObj)) } catch(e){}
 		if(!--this.#pendingWrites){
 			const callbacks = this.#finishedPendingWritesCallbacks;
 			this.#finishedPendingWritesCallbacks = [];

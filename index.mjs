@@ -8,7 +8,7 @@ async function timer(func, name){
 	console.log(`Process ${name} done in ${Date.now() - start}ms`);
 }
 
-async function main(){
+void async function(){
 	const start = Date.now();
 	await Promise.all([
 		timer(general, 'general'),
@@ -16,6 +16,4 @@ async function main(){
 		timer(logLevels, 'log-levels'),
 	]);
 	console.log(`Generation completed in ${Date.now() - start}ms`);
-}
-
-main();
+}()

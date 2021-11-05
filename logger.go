@@ -63,7 +63,7 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 		Timestamp: int64(now.UnixNano() / (int64(time.Millisecond) / int64(time.Nanosecond))),
 		Level:     level,
 	}
-	if msg == nil {
+	if message == nil {
 		sendObj.Message = "Gog nil message. Please, don't log nils"
 	} else if msg, ok := message.(string); ok {
 		sendObj.Message = msg

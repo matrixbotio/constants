@@ -84,7 +84,7 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 	l.Dev.Send(string(r))
 }
 
-func NewLogger(dev interface{}, host string, source string, lowestLevelName string) *Logger {
+func NewLogger(dev interface{}, host string, source string, lowestLevelName ...string) *Logger {
 	format, formatLen := getSuitableDatetimeFormat(logConfig["datetime_format"].(string))
 	logLevels := make(map[string]*logLevelDesc)
 	lowestLevel := 2
@@ -104,7 +104,7 @@ func NewLogger(dev interface{}, host string, source string, lowestLevelName stri
 					}
 					levelName := elMap["name"].(string)
 					logLevels[levelName] = logLevel
-					if lowestLevelName == levelName {
+					if len(lowestLevelName) > 0 && lowestLevelName[0] == levelName {
 						lowestLevel = level
 					}
 				}

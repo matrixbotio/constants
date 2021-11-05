@@ -64,14 +64,16 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 		Timestamp: int64(now.UnixNano() / (int64(time.Millisecond) / int64(time.Nanosecond))),
 		Level:     level,
 	}
-	if msg, ok := message.(string); ok {
+	if msg == nil {
+		sendObj.Message = "Gog nil message. Please, don't log nils"
+	} else if msg, ok := message.(string); ok {
 		sendObj.Message = msg
 	} else if err, ok := message.(*APIError); ok {
 		sendObj.Message = err.Message
 		sendObj.Stack = err.Stack
 		sendObj.Code = err.Code
 	} else {
-		return
+		sendObj.Message = "Logger error: can't cast provided message to string or *APIError"
 	}
 	formattedTime := now.Format(l.DTFormat)
 	formattedTime += strings.Repeat("0", l.DTFormatLen-utf8.RuneCountInString(formattedTime))

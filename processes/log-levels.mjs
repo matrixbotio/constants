@@ -5,11 +5,12 @@ import js from '../generators/log-levels-js.mjs';
 import json from '../generators/log-levels-json.mjs';
 import go from '../generators/log-levels-go.mjs';
 import java from '../generators/log-levels-java.mjs';
+import inputs from '../helpers/inputs.mjs';
 
 const { readFile, writeFile, mkdir } = promises;
 
-const configPath = process.env['INPUT_CONFIG-PATH'],
-	destPath = process.env['INPUT_DEST-PATH'],
+const configPath = inputs['config-path'],
+	destPath = inputs['dest-path'],
 	ghWorkspace = process.env.GITHUB_WORKSPACE;
 
 const yamlFile = resolve(ghWorkspace, configPath, 'log-levels.yml');

@@ -2,10 +2,11 @@ import { promises } from 'fs';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
 import java from '../generators/general-java.mjs';
+import inputs from '../helpers/inputs.mjs';
 
 const { writeFile, readFile, readdir, mkdir } = promises;
 
-const dest = resolve(process.env.GITHUB_WORKSPACE, process.env['INPUT_DEST-PATH']);
+const dest = resolve(process.env.GITHUB_WORKSPACE, inputs['dest-path']);
 const staticDir = resolve(fileURLToPath(import.meta.url), '../../static');
 
 async function readDirRecursive(dirname){

@@ -3,11 +3,12 @@ import { promises } from 'fs';
 import { resolve } from 'path';
 import js from '../generators/errors-js.mjs';
 import json from '../generators/errors-json.mjs';
+import inputs from '../helpers/inputs.mjs';
 
 const { readFile, writeFile, mkdir } = promises;
 
-const configPath = process.env['INPUT_CONFIG-PATH'],
-	destPath = process.env['INPUT_DEST-PATH'],
+const configPath = inputs['config-path'],
+	destPath = inputs['dest-path'],
 	ghWorkspace = process.env.GITHUB_WORKSPACE;
 
 const yamlFile = resolve(ghWorkspace, configPath, 'errors.yml');

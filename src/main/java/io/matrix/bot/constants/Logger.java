@@ -3,7 +3,6 @@ package io.matrix.bot.constants;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.matrix.bot.constants.accessor.LogLevelAccessor;
-import io.matrix.bot.constants.model.Error;
 import io.matrix.bot.constants.model.LogData;
 import io.matrix.bot.constants.model.LoggerConfig;
 import io.matrix.bot.constants.model.MatrixException;
@@ -199,10 +198,11 @@ public class Logger {
 		}
 	}
 
-	private static void printErr(final String time, final String errMsg, final Exception e) {
-		final String msgAndStack = errMsg + "\n" + (e.getMessage() == null ? e.toString() : e.getMessage()) + "\n"
-				+ formatStackTraceString(e.getStackTrace());
-		final var logLine = formatLogLine(getErrLogFormat(), time, msgAndStack);
+	private static void printErr(String time, String errMsg, Exception e) {
+		var msgAndStack = errMsg + "
+" + e + "
+" + formatStackTraceString(e.getStackTrace(), e.getCause());
+		var logLine = formatLogLine(getErrLogFormat(), time, msgAndStack);
 		System.err.println(logLine);
 	}
 

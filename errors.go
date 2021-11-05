@@ -1,8 +1,10 @@
 package constants
 
 import (
-	"github.com/go-stack/stack"
+	"fmt"
 	"strings"
+
+	"github.com/go-stack/stack"
 )
 
 const errStackJoin = "\n    at "
@@ -23,7 +25,7 @@ func getErrors(url string) map[string]*APIError {
 func getStack() string {
 	rt := stack.Trace().TrimRuntime()
 	rt = rt[3:]
-	str := rt.String()
+	str := fmt.Sprintf("%#v", rt)
 	str = str[1:len(str)-1]
 	arr := strings.Split(str, " ")
 	return errStackJoin[1:] + strings.Join(arr, errStackJoin)

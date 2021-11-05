@@ -2,19 +2,19 @@ const base = `
 package constants
 
 import (
-	"time"
-	"os"
-	"strings"
-	"unicode/utf8"
 	"encoding/json"
+	"os"
 	"strconv"
+	"strings"
 	"sync"
+	"time"
+	"unicode/utf8"
 )
 
 var wg sync.WaitGroup
 
 type logDevice interface{
-    Send(data string)
+	Send(data string)
 }
 
 type sendMessageFormat struct {
@@ -30,19 +30,20 @@ type sendMessageFormat struct {
 type logLevelDesc struct {
 	Stderr bool
 	Format string
-	Level int
+	Level  int
 }
 
 type Logger struct {
-	Dev logDevice
-	Host string
-	Source string
-	DTFormat string
+	Dev         logDevice
+	Host        string
+	Source      string
+	DTFormat    string
 	DTFormatLen int
-	LogLevels map[string]*logLevelDesc
+	LogLevels   map[string]*logLevelDesc
+	LowestLevel int
 }
 
-func getSuitableDatetimeFormat(format string) (string, int){
+func getSuitableDatetimeFormat(format string) (string, int) {
 	return strings.NewReplacer("YYYY", "2006", "MM", "01", "DD", "02", "HH", "15", "mm", "04", "ss", "05", "SSS", "999").Replace(format), utf8.RuneCountInString(format)
 }
 
@@ -54,14 +55,14 @@ func getLogs(url string) map[string]interface{} {
 
 var logConfig = getLogs("https://raw.githubusercontent.com/matrixbotio/constants/master/logger/logger.json")
 
-func (l *Logger) baseWriter(message interface{}, output *os.File, template string, level int){
+func (l *Logger) baseWriter(message interface{}, output *os.File, template string, level int) {
 	defer wg.Done()
 	now := time.Now()
 	sendObj := &sendMessageFormat{
-		Source: l.Source,
-		Host: l.Host,
+		Source:    l.Source,
+		Host:      l.Host,
 		Timestamp: int64(now.UnixNano() / (int64(time.Millisecond) / int64(time.Nanosecond))),
-		Level: level,
+		Level:     level,
 	}
 	if msg, ok := message.(string); ok {
 		sendObj.Message = msg
@@ -73,7 +74,7 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 		return
 	}
 	formattedTime := now.Format(l.DTFormat)
-	formattedTime += strings.Repeat("0", l.DTFormatLen - utf8.RuneCountInString(formattedTime))
+	formattedTime += strings.Repeat("0", l.DTFormatLen-utf8.RuneCountInString(formattedTime))
 	formattedMessage := sendObj.Message
 	if sendObj.Stack != nil {
 		formattedMessage += "\\n" + sendObj.Stack.(string)
@@ -83,15 +84,16 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 	l.Dev.Send(string(r))
 }
 
-func NewLogger(dev interface{}, host string, source string) *Logger {
+func NewLogger(dev interface{}, host string, source string, lowestLevelName string) *Logger {
 	format, formatLen := getSuitableDatetimeFormat(logConfig["datetime_format"].(string))
 	logLevels := make(map[string]*logLevelDesc)
+	lowestLevel := 2
 	if levelsSection, ok := logConfig["levels"].(map[string]interface{}); ok {
 		for strlevel, element := range levelsSection {
 			if level, err := strconv.Atoi(strlevel); err == nil {
 				if elMap, ok := element.(map[string]interface{}); ok {
 					logLevel := &logLevelDesc{
-						Level: level,
+						Level:  level,
 						Stderr: false,
 					}
 					if stderr, exists := elMap["stderr_format"]; exists {
@@ -100,18 +102,23 @@ func NewLogger(dev interface{}, host string, source string) *Logger {
 					} else if stdout, exists := elMap["stdout_format"]; exists {
 						logLevel.Format = stdout.(string)
 					}
-					logLevels[elMap["name"].(string)] = logLevel
+					levelName := elMap["name"].(string)
+					logLevels[levelName] = logLevel
+					if lowestLevelName == levelName {
+						lowestLevel = level
+					}
 				}
 			}
 		}
 	}
 	return &Logger {
-		Dev: dev.(logDevice),
-		Host: host,
-		Source: source,
-		DTFormat: format,
+		Dev:         dev.(logDevice),
+		Host:        host,
+		Source:      source,
+		DTFormat:    format,
 		DTFormatLen: formatLen,
-		LogLevels: logLevels,
+		LogLevels:   logLevels,
+		LowestLevel: lowestLevel,
 	}
 }
 
@@ -126,8 +133,11 @@ export default struct => {
 	for(const level in levels) if(!Number.isNaN(+level)){
 		res += `
 // ${levels[level].description}
-func (l *Logger) ${levels[level].name.slice(0, 1).toUpperCase() + levels[level].name.slice(1)}(message interface{}){
+func (l *Logger) ${levels[level].name.slice(0, 1).toUpperCase() + levels[level].name.slice(1)}(message interface{}) {
 	logLevel := l.LogLevels[${JSON.stringify(levels[level].name)}]
+	if l.LowestLevel > logLevel.Level {
+		return
+	}
 	output := os.Stdout
 	if logLevel.Stderr {
 		output = os.Stderr

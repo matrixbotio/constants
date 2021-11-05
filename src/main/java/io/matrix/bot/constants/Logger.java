@@ -199,9 +199,7 @@ public class Logger {
 	}
 
 	private static void printErr(String time, String errMsg, Exception e) {
-		var msgAndStack = errMsg + "
-" + e + "
-" + formatStackTraceString(e.getStackTrace(), e.getCause());
+		var msgAndStack = errMsg + "\n" + e + "\n" + formatStackTraceString(e.getStackTrace(), e.getCause());
 		var logLine = formatLogLine(getErrLogFormat(), time, msgAndStack);
 		System.err.println(logLine);
 	}

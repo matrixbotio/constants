@@ -17,13 +17,13 @@ type logDevice interface{
 }
 
 type sendMessageFormat struct {
-	Source  string      `json:"source"`
-	Host    string      `json:"host"`
-	Time    string      `json:"time"`
-	Level   int         `json:"level"`
-	Message string      `json:"message"`
-	Code    interface{} `json:"code,omitempty"`
-	Stack   interface{} `json:"stack,omitempty"`
+	Source    string      `json:"source"`
+	Host      string      `json:"host"`
+	Timestamp string      `json:"timestamp"`
+	Level     int         `json:"level"`
+	Message   string      `json:"message"`
+	Code      interface{} `json:"code,omitempty"`
+	Stack     interface{} `json:"stack,omitempty"`
 }
 
 type logLevelDesc struct {
@@ -60,7 +60,7 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 	sendObj := &sendMessageFormat{
 		Source: l.Source,
 		Host:   l.Host,
-		Time:   time.Now().Format(time.RFC3339Nano),
+		Timestamp:   time.Now().Format(time.RFC3339Nano),
 		Level:  level,
 	}
 	if message == nil {

@@ -69,7 +69,7 @@ export default class Logger{
 			source: this.#source,
 			host: this.#host,
 			level,
-			time: now,
+			timestamp: now,
 		}, getBaseLogData(message));
 		try{ await this.#dev.send(JSON.stringify(sendObj)) } catch(e){}
 		if(!--this.#pendingWrites){

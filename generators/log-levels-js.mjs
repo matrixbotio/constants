@@ -59,7 +59,7 @@ export default class Logger{
 		this.#consoleWriter = consoleWriter;
 		this.#pendingWrites = 0;
 		this.#finishedPendingWritesCallbacks = [];
-		this.#getCurrentISOTime = getCurrentISOTime || () => new Date().toISOString();
+		this.#getCurrentISOTime = getCurrentISOTime || (() => new Date().toISOString());
 	}
 
 	async #log(message, writer, format, level){

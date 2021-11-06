@@ -50,25 +50,27 @@ export default class Logger{
 	#consoleWriter
 	#pendingWrites
 	#finishedPendingWritesCallbacks
+	#getCurrentISOTime
 
-	constructor(dev, host, source, consoleWriter){
+	constructor(dev, host, source, consoleWriter, getCurrentISOTime){
 		this.#dev = dev;
 		this.#host = host;
 		this.#source = source;
 		this.#consoleWriter = consoleWriter;
 		this.#pendingWrites = 0;
 		this.#finishedPendingWritesCallbacks = [];
+		this.#getCurrentISOTime = getCurrentISOTime || () => new Date().toISOString();
 	}
 
 	async #log(message, writer, format, level){
+		const now = this.#getCurrentISOTime();
 		this.#pendingWrites++;
-		const now = new Date;
-		(await this.#consoleWriter)[writer].write(applyFormat(format, now, message) + nl);
+		(await this.#consoleWriter)[writer].write(applyFormat(format, new Date(now), message) + nl);
 		const sendObj = Object.assign({
 			source: this.#source,
 			host: this.#host,
 			level,
-			timestamp: +now,
+			timestamp: now,
 		}, getBaseLogData(message));
 		try{ await this.#dev.send(JSON.stringify(sendObj)) } catch(e){}
 		if(!--this.#pendingWrites){
@@ -101,7 +103,13 @@ interface ConsoleDevice{
 }
 
 export default class Logger{
-	constructor(dev: OutputDevice, host: string, source: string, consoleDevice?: ConsoleDevice | Promise<ConsoleDevice>)
+	constructor(
+		dev: OutputDevice,
+		host: string,
+		source: string,
+		consoleDevice: ConsoleDevice | Promise<ConsoleDevice>,
+		getCurrentISOTime?: () => string,
+	)
 
 	finishedPendingWrites(): Promise<void>
 `.slice(1);

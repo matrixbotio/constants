@@ -12,7 +12,13 @@ interface ConsoleDevice{
 }
 
 export default class Logger{
-	constructor(dev: OutputDevice, host: string, source: string, consoleDevice?: ConsoleDevice | Promise<ConsoleDevice>)
+	constructor(
+		dev: OutputDevice,
+		host: string,
+		source: string,
+		consoleDevice: ConsoleDevice | Promise<ConsoleDevice>,
+		getCurrentISOTime?: () => string,
+	)
 
 	finishedPendingWrites(): Promise<void>
 

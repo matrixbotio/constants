@@ -18,13 +18,13 @@ type logDevice interface{
 }
 
 type sendMessageFormat struct {
-	Source    string      \`json:"source"\`
-	Host      string      \`json:"host"\`
-	Timestamp int64       \`json:"timestamp"\`
-	Level     int         \`json:"level"\`
-	Message   string      \`json:"message"\`
-	Code      interface{} \`json:"code,omitempty"\`
-	Stack     interface{} \`json:"stack,omitempty"\`
+	Source  string      \`json:"source"\`
+	Host    string      \`json:"host"\`
+	Time    string      \`json:"time"\`
+	Level   int         \`json:"level"\`
+	Message string      \`json:"message"\`
+	Code    interface{} \`json:"code,omitempty"\`
+	Stack   interface{} \`json:"stack,omitempty"\`
 }
 
 type logLevelDesc struct {
@@ -59,10 +59,10 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 	defer wg.Done()
 	now := time.Now()
 	sendObj := &sendMessageFormat{
-		Source:    l.Source,
-		Host:      l.Host,
-		Timestamp: int64(now.UnixNano() / (int64(time.Millisecond) / int64(time.Nanosecond))),
-		Level:     level,
+		Source: l.Source,
+		Host:   l.Host,
+		Time:   time.Now().Format(time.RFC3339Nano),
+		Level:  level,
 	}
 	if message == nil {
 		sendObj.Message = "Gog nil message. Please, don't log nils"

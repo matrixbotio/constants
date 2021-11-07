@@ -1,22 +1,25 @@
 const head = `
-/**
- * @template {number} C
- * @template {string} N
- * @template {string} M
- * @arg {C} code
- * @arg {N} name
- * @arg {M} message
- */
-function _(code, name, message){
-	return Object.assign(new Error, { code, message, name })
+function _(code, name, msg){
+	return class extends Error{
+		constructor(message = msg){
+			super(message);
+			Object.assign(this, { code, message, name });
+		}
+	}
 }
 
 export const
 `.slice(1);
 
 const tsHead = `
-function _<C extends number, N extends string, M extends string>(code: C, name: N, message: M){
-	return Object.assign(new Error, { code, message, name })
+interface ServiceError<C extends number, N extends string, M extends string> {
+    new(): Error & { code: C, message: M, name: N }
+    new<Message extends string>(message: Message): Error & { code: C, message: Message, name: N }
+}
+
+function _<C extends number, N extends string, M extends string>(code: C, name: N, message: M): ServiceError<C, N, M> {
+    let Class: ServiceError<C, N, M>;
+	return Class
 }
 
 export const

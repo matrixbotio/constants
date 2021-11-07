@@ -1,13 +1,10 @@
-/**
- * @template {number} C
- * @template {string} N
- * @template {string} M
- * @arg {C} code
- * @arg {N} name
- * @arg {M} message
- */
-function _(code, name, message){
-	return Object.assign(new Error, { code, message, name })
+function _(code, name, msg){
+	return class extends Error{
+		constructor(message = msg){
+			super(message);
+			Object.assign(this, { code, message, name });
+		}
+	}
 }
 
 export const

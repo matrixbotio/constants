@@ -39,8 +39,11 @@ function padLines(text){
 	return text.map(line => ('    ' + line.trimLeft()));
 }
 
-function applyFormat(format, datetime, message){
-	return format.replace('%datetime%', formatDatetime(datetime)).replace('%message%', message);
+function applyFormat(format, datetime, baseLogData){
+	return format
+		.replace('%datetime%', formatDatetime(datetime))
+		.replace('%message%', baseLogData.message)
+		+ (baseLogData.stack ? nl + baseLogData.stack : '');
 }
 
 export default class Logger{
@@ -65,13 +68,14 @@ export default class Logger{
 	async #log(message, writer, format, level){
 		const now = this.#getCurrentISOTime();
 		this.#pendingWrites++;
-		(await this.#consoleWriter)[writer].write(applyFormat(format, new Date(now), message) + nl);
+		const baseLogData = getBaseLogData(message);
+		(await this.#consoleWriter)[writer].write(applyFormat(format, new Date(now), baseLogData) + nl);
 		const sendObj = Object.assign({
 			source: this.#source,
 			host: this.#host,
 			level,
 			timestamp: now,
-		}, getBaseLogData(message));
+		}, baseLogData);
 		try{ await this.#dev.send(JSON.stringify(sendObj)) } catch(e){}
 		if(!--this.#pendingWrites){
 			const callbacks = this.#finishedPendingWritesCallbacks;

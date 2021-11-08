@@ -1,4 +1,16 @@
 const head = `
+/**
+ * Pseudo typings, used to generate proper error types in doc. You should ignore it.
+ * Real typings is located at errors.ts file and re-exported by index.d.ts
+ * 
+ * @template {number} C
+ * @template {string} N
+ * @template {string} M
+ * @arg {C} code
+ * @arg {N} name
+ * @arg {M} message
+ * @return {Error & { code: C, name: N, message: M }}
+ */
 function _(code, name, msg){
 	return class extends Error{
 		constructor(message = msg){

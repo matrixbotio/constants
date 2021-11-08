@@ -7,7 +7,7 @@
  * @template {string} M
  * @arg {C} code
  * @arg {N} name
- * @arg {M} message
+ * @arg {M} msg
  * @return {Error & { code: C, name: N, message: M }}
  */
 function _(code, name, msg){

@@ -1,5 +1,6 @@
 package io.matrix.bot.constants;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.StringJoiner;
 
@@ -9,6 +10,10 @@ public class Util {
 		final var stringJoiner = new StringJoiner("\n\tat ");
 		Arrays.stream(stackTrace).forEach(stackTraceElement -> stringJoiner.add(stackTraceElement.toString()));
 		return stringJoiner.toString();
+	}
+
+	static void initLog(String msg) {
+		System.out.println(LocalDateTime.now() + ": " + msg);
 	}
 
 }

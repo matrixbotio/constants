@@ -38,8 +38,11 @@ function padLines(text){
 	return text.map(line => ('    ' + line.trimLeft()));
 }
 
-function applyFormat(format, datetime, message){
-	return format.replace('%datetime%', formatDatetime(datetime)).replace('%message%', message);
+function applyFormat(format, datetime, baseLogData){
+	return format
+		.replace('%datetime%', formatDatetime(datetime))
+		.replace('%message%', baseLogData.message)
+		+ (baseLogData.stack ? nl + baseLogData.stack : '');
 }
 
 export default class Logger{
@@ -49,27 +52,30 @@ export default class Logger{
 	#consoleWriter
 	#pendingWrites
 	#finishedPendingWritesCallbacks
+	#getCurrentISOTime
 
-	constructor(dev, host, source, consoleWriter){
+	constructor(dev, host, source, consoleWriter, getCurrentISOTime){
 		this.#dev = dev;
 		this.#host = host;
 		this.#source = source;
 		this.#consoleWriter = consoleWriter;
 		this.#pendingWrites = 0;
 		this.#finishedPendingWritesCallbacks = [];
+		this.#getCurrentISOTime = getCurrentISOTime || (() => new Date().toISOString());
 	}
 
 	async #log(message, writer, format, level){
+		const now = this.#getCurrentISOTime();
 		this.#pendingWrites++;
-		const now = new Date;
-		(await this.#consoleWriter)[writer].write(applyFormat(format, now, message) + nl);
+		const baseLogData = getBaseLogData(message);
+		(await this.#consoleWriter)[writer].write(applyFormat(format, new Date(now), baseLogData) + nl);
 		const sendObj = Object.assign({
 			source: this.#source,
 			host: this.#host,
 			level,
-			timestamp: +now,
-		}, getBaseLogData(message));
-		await this.#dev.send(JSON.stringify(sendObj));
+			timestamp: now,
+		}, baseLogData);
+		try{ await this.#dev.send(JSON.stringify(sendObj)) } catch(e){}
 		if(!--this.#pendingWrites){
 			const callbacks = this.#finishedPendingWritesCallbacks;
 			this.#finishedPendingWritesCallbacks = [];

@@ -2,8 +2,6 @@ package io.matrix.bot.constants.accessor;
 
 import io.matrix.bot.constants.model.Error;
 
-import static io.matrix.bot.constants.Util.formatStackTraceString;
-
 public class MessageAccessor {
 
 	public static String getMessage(final Object message) {

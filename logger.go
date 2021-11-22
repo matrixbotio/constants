@@ -12,14 +12,14 @@ import (
 
 var wg sync.WaitGroup
 
-type logDevice interface {
+type logDevice interface{
 	Send(data string)
 }
 
 type sendMessageFormat struct {
 	Source    string      `json:"source"`
 	Host      string      `json:"host"`
-	Timestamp int64       `json:"timestamp"`
+	Timestamp string      `json:"timestamp"`
 	Level     int         `json:"level"`
 	Message   string      `json:"message"`
 	Code      interface{} `json:"code,omitempty"`
@@ -58,19 +58,21 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 	defer wg.Done()
 	now := time.Now()
 	sendObj := &sendMessageFormat{
-		Source:    l.Source,
-		Host:      l.Host,
-		Timestamp: int64(now.UnixNano() / (int64(time.Millisecond) / int64(time.Nanosecond))),
-		Level:     level,
+		Source: l.Source,
+		Host:   l.Host,
+		Timestamp:   time.Now().Format(time.RFC3339Nano),
+		Level:  level,
 	}
-	if msg, ok := message.(string); ok {
+	if message == nil {
+		sendObj.Message = "Gog nil message. Please, don't log nils"
+	} else if msg, ok := message.(string); ok {
 		sendObj.Message = msg
 	} else if err, ok := message.(*APIError); ok {
 		sendObj.Message = err.Message
 		sendObj.Stack = err.Stack
 		sendObj.Code = err.Code
 	} else {
-		return
+		sendObj.Message = "Logger error: can't cast provided message to string or *APIError"
 	}
 	formattedTime := now.Format(l.DTFormat)
 	formattedTime += strings.Repeat("0", l.DTFormatLen-utf8.RuneCountInString(formattedTime))
@@ -83,7 +85,7 @@ func (l *Logger) baseWriter(message interface{}, output *os.File, template strin
 	l.Dev.Send(string(r))
 }
 
-func NewLogger(dev interface{}, host string, source string, lowestLevelName string) *Logger {
+func NewLogger(dev interface{}, host string, source string, lowestLevelName ...string) *Logger {
 	format, formatLen := getSuitableDatetimeFormat(logConfig["datetime_format"].(string))
 	logLevels := make(map[string]*logLevelDesc)
 	lowestLevel := 2
@@ -103,14 +105,14 @@ func NewLogger(dev interface{}, host string, source string, lowestLevelName stri
 					}
 					levelName := elMap["name"].(string)
 					logLevels[levelName] = logLevel
-					if lowestLevelName == levelName {
+					if len(lowestLevelName) > 0 && lowestLevelName[0] == levelName {
 						lowestLevel = level
 					}
 				}
 			}
 		}
 	}
-	return &Logger{
+	return &Logger {
 		Dev:         dev.(logDevice),
 		Host:        host,
 		Source:      source,

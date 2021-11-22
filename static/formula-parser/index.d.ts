@@ -1,7 +1,7 @@
 //@! Typings from https://github.com/peggyjs/peggy
 
 /** Provides information pointing to a location within a source. */
-export interface Location {
+interface Location {
     /** Line in the parsed source (1-based). */
     line: number;
     /** Column in the parsed source (1-based). */
@@ -11,7 +11,7 @@ export interface Location {
 }
 
 /** The `start` and `end` position's of an object within the source. */
-export interface LocationRange {
+interface LocationRange {
     /** Any object that was supplied to the `parse()` call as the `grammarSource` option. */
     source: any;
     /** Position at the beginning of the expression. */
@@ -80,7 +80,7 @@ type Expectation
  * to the actual source text of a grammar. That entries is necessary for
  * formatting errors.
  */
- export interface SourceText {
+interface SourceText {
     /**
      * Identifier of a grammar that stored in the `location().source` property
      * of error and diagnostic messages.
@@ -94,7 +94,7 @@ type Expectation
 }
 
 /** Thrown if the grammar contains a syntax error. */
-class SyntaxError extends Error {
+export class SyntaxError extends Error {
     /** Location where error was originated. */
     location: LocationRange;
     /**
@@ -135,3 +135,44 @@ class SyntaxError extends Error {
      */
     static buildMessage(expected: Expectation[], found: string): string;
 }
+
+type Indicator = {
+    indicator: string
+    interval: {
+        years: number
+        months: number
+        weeks: number
+        days: number
+        hours: number
+        minutes: number
+        seconds: number
+    }
+    bar_count: number
+}
+
+type Operator = '>' | '<'
+
+type Relation = {
+    operand_1_type: 'indicator'
+    operand_1: Indicator
+    operand_2_type: 'number'
+    operand_2: number
+    operator: Operator
+} | {
+    operand_1_type: 'number'
+    operand_1: number
+    operand_2_type: 'indicator'
+    operand_2: Indicator
+    operator: Operator
+} | {
+    operand_1_type: 'indicator'
+    operand_1: Indicator
+    operand_2_type: 'indicator'
+    operand_2: Indicator
+    operator: Operator
+}
+
+/**
+ * @throws {SyntaxError}
+ */
+export default function parse(formula: string): Array<Relation>

@@ -1,3 +1,21 @@
+{
+    const DEFAULT_INTERVAL = "1m";
+
+    function relation(operand1type, operand1, operand2type, operand2, operator){
+        return {
+            operand1: {
+                type: operand1type,
+                value: operand1,
+            },
+            operand2: {
+                type: operand2type,
+                value: operand2,
+            },
+            operator,
+        };
+    }
+}
+
 Main
     = Expression
 
@@ -10,46 +28,21 @@ Integer
 Float
     = _ [0-9]+ ("."[0-9]+)? { return parseFloat(text()) }
 
-DurationYears
-    = dl:Integer "Y" { return parseInt(dl, 10) }
-
-DurationMonths
-    = dl:[2-9] "M" { return parseInt(dl, 10) }
-    / dl:("1"[01]?) "M" { return parseInt(dl.join(""), 10) }
-
-DurationWeeks
-    = dl:[1-4] "W" { return parseInt(dl, 10) }
-
-DurationDays
-    = dl:[1-6] "D" { return parseInt(dl, 10) }
-
-DurationHours
-    = dl:[3-9] "h" { return parseInt(dl, 10) }
-    / dl:("1"[0-9]?) "h" { return parseInt(dl.join(""), 10) }
-    / dl:("2"[0-3]?) "h" { return parseInt(dl.join(""), 10) }
-
-Duration_1_59_Int
-    = [6-9] { return parseInt(text(), 10) }
-    / ([1-5][0-9]?) { return parseInt(text(), 10) }
-
-DurationMinutes
-    = dl:Duration_1_59_Int "m" { return dl }
-
-DurationSeconds
-    = dl:Duration_1_59_Int "s" { return dl }
-
-Duration
-    = y:DurationYears? mm:DurationMonths? w:DurationWeeks? d:DurationDays? h:DurationHours? m:DurationMinutes? s:DurationSeconds? {
-        return {
-            years: y || 0,
-            months: mm || 0,
-            weeks: w || 0,
-            days: d || 0,
-            hours: h || 0,
-            minutes: m || 0,
-            seconds: s || 0,
-        };
-    }
+Interval
+    = "1m"
+    / "3m"
+    / "5m"
+    / "15m"
+    / "30m"
+    / "1h"
+    / "2h"
+    / "4h"
+    / "6h"
+    / "8h"
+    / "12h"
+    / "1d"
+    / "3d"
+    / "1w"
 
 IndicatorName
     = "CLOSE"
@@ -72,47 +65,31 @@ IndicatorName
     / "PUMPDUMPOPT"
 
 Indicator
-    = indicator:IndicatorName "(" _ du:Duration _ "," _ bc:Integer _ ")" {
+    = indicator:IndicatorName "(" _ i:Interval _ "," _ bc:Integer _ ")" {
         return {
             indicator,
-            interval: du,
+            interval: i,
             bar_count: bc,
         };
     }
     / indicator:IndicatorName "(" _ bc:Integer _ ")" {
         return {
             indicator,
-            interval: {
-                years: 0,
-                months: 0,
-                weeks: 0,
-                days: 0,
-                hours: 0,
-                minutes: 1,
-                seconds: 0,
-            },
+            interval: DEFAULT_INTERVAL,
             bar_count: bc,
         };
     }
-    / indicator:IndicatorName "(" _ du:Duration _ ")" {
+    / indicator:IndicatorName "(" _ i:Interval _ ")" {
         return {
             indicator,
-            interval: du,
+            interval: i,
             bar_count: 1,
         };
     }
     / indicator:IndicatorName {
         return {
             indicator,
-            interval: {
-                years: 0,
-                months: 0,
-                weeks: 0,
-                days: 0,
-                hours: 0,
-                minutes: 1,
-                seconds: 0,
-            },
+            interval: DEFAULT_INTERVAL,
             bar_count: 1,
         };
     }
@@ -123,31 +100,31 @@ CompOperator
 
 Relation
     = op1:Indicator _ comp:CompOperator _ op2:Float {
-       return {
-           operand_1_type: "indicator",
-           operand_1: op1,
-           operand_2_type: "number",
-           operand_2: op2,
-           operator: comp,
-       };
+        return relation(
+            "indicator",
+            op1,
+            "number",
+            op2,
+            comp,
+        );
     }
     / op1:Float _ comp:CompOperator _ op2:Indicator {
-       return {
-           operand_1_type: "number",
-           operand_1: op1,
-           operand_2_type: "indicator",
-           operand_2: op2,
-           operator: comp,
-       };
+        return relation(
+            "number",
+            op1,
+            "indicator",
+            op2,
+            comp,
+        );
     }
     / op1:Indicator _ comp:CompOperator _ op2:Indicator {
-       return {
-           operand_1_type: "indicator",
-           operand_1: op1,
-           operand_2_type: "indicator",
-           operand_2: op2,
-           operator: comp,
-       };
+        return relation(
+            "indicator",
+            op1,
+            "indicator",
+            op2,
+            comp,
+        );
     }
 
 Expression

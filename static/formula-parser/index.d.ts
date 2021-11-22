@@ -138,37 +138,41 @@ export class SyntaxError extends Error {
 
 type Indicator = {
     indicator: string
-    interval: {
-        years: number
-        months: number
-        weeks: number
-        days: number
-        hours: number
-        minutes: number
-        seconds: number
-    }
+    interval: "1m" | "3m" | "5m" | "15m" | "30m" | "1h" | "2h" | "4h" | "6h" | "8h" | "12h" | "1d" | "3d" | "1w"
     bar_count: number
 }
 
 type Operator = '>' | '<'
 
 type Relation = {
-    operand_1_type: 'indicator'
-    operand_1: Indicator
-    operand_2_type: 'number'
-    operand_2: number
+    operand1: {
+        type: 'indicator'
+        value: Indicator
+    }
+    operand2: {
+        type: 'number'
+        value: number
+    }
     operator: Operator
 } | {
-    operand_1_type: 'number'
-    operand_1: number
-    operand_2_type: 'indicator'
-    operand_2: Indicator
+    operand1: {
+        type: 'number'
+        value: number
+    }
+    operand2: {
+        type: 'indicator'
+        value: Indicator
+    }
     operator: Operator
 } | {
-    operand_1_type: 'indicator'
-    operand_1: Indicator
-    operand_2_type: 'indicator'
-    operand_2: Indicator
+    operand1: {
+        type: 'indicator'
+        value: Indicator
+    }
+    operand2: {
+        type: 'indicator'
+        value: Indicator
+    }
     operator: Operator
 }
 

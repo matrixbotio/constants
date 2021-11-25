@@ -2,6 +2,7 @@ import general from './processes/general.mjs';
 import errors from './processes/errors.mjs';
 import logLevels from './processes/log-levels.mjs';
 import formulaParser from './processes/formula-parser.mjs';
+import notificationTypes from './processes/notification-types.mjs';
 
 async function timer(func, name){
 	const start = Date.now();
@@ -16,6 +17,7 @@ void async function(){
 		timer(errors, 'errors'),
 		timer(logLevels, 'log-levels'),
 		timer(formulaParser, 'formula-parser'),
+		timer(notificationTypes, 'formula-parser'),
 	]);
 	console.log(`Generation completed in ${Date.now() - start}ms`);
 }()

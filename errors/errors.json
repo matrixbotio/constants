@@ -139,6 +139,11 @@
 		"message": "This email is already used",
 		"name": "USER_EMAIL_USED"
 	},
+	"USER_NICKNAME_USED": {
+		"code": -36303,
+		"message": "This nickname is already used",
+		"name": "USER_NICKNAME_USED"
+	},
 	"USER_IS_AUTH": {
 		"code": -36100,
 		"message": "User is authorized",

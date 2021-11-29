@@ -52,6 +52,7 @@ export const
     USER_EMAIL_NOT_IN_WHITELIST = _(-36303, "USER_EMAIL_NOT_IN_WHITELIST", "Now we're at testing stage and your email isn't in whitelist. We can't allow you to register. Sorry"),
     USER_EMAIL_RECOVERY_CODE_WRONG = _(-36305, "USER_EMAIL_RECOVERY_CODE_WRONG", "Can't find such e-mail recovery code"),
     USER_EMAIL_USED = _(-36302, "USER_EMAIL_USED", "This email is already used"),
+    USER_NICKNAME_USED = _(-36303, "USER_NICKNAME_USED", "This nickname is already used"),
     USER_IS_AUTH = _(-36100, "USER_IS_AUTH", "User is authorized"),
     USER_NOT_AUTH = _(-36200, "USER_NOT_AUTH", "User not authorized"),
     USER_NOT_FOUND = _(-36010, "USER_NOT_FOUND", "User not found"),

@@ -91,6 +91,9 @@ USER:
   EMAIL_USED:
     - -36302
     - This email is already used
+  NICKNAME_USED:
+    - -36303
+    - This nickname is already used
   IS_AUTH:
     - -36100
     - User is authorized

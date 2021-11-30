@@ -43,7 +43,7 @@ type Logger struct {
 }
 
 func getSuitableDatetimeFormat(format string) (string, int) {
-	return strings.NewReplacer("YYYY", "2006", "MM", "01", "DD", "02", "HH", "15", "mm", "04", "ss", "05", "SSS", "999").Replace(format), utf8.RuneCountInString(format)
+	return strings.NewReplacer("YYYY", "2006", "MM", "01", "dd", "02", "HH", "15", "mm", "04", "ss", "05", "SSS", "999").Replace(format), utf8.RuneCountInString(format)
 }
 
 func getLogs(url string) map[string]interface{} {

@@ -1,4 +1,4 @@
-datetime_format: YYYY-MM-DD HH:mm:ss.SSS
+datetime_format: YYYY-MM-dd HH:mm:ss.SSS
 
 levels:
   1:

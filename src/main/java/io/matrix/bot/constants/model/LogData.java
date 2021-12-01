@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -15,7 +16,7 @@ import static java.time.ZoneOffset.UTC;
 public class LogData {
 	private String source;
 	private String host;
-	private long timestamp;
+	private LocalDateTime timestamp;
 	private int level;
 	private String message;
 	private int code;

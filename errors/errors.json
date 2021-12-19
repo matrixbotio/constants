@@ -228,5 +228,10 @@
 		"code": -40102,
 		"message": "Exception validating formula",
 		"name": "FORMULA_VALIDATION_ERR"
+	},
+	"INSUFFICIENT_BALANCE": {
+		"code": -41000,
+		"message": "Insufficient balance: %s",
+		"name": "INSUFFICIENT_BALANCE"
 	}
 }

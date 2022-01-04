@@ -54,8 +54,10 @@ export default class Logger{
 	#pendingWrites
 	#finishedPendingWritesCallbacks
 	#getCurrentISOTime
+	#logLevel
+	#local
 
-	constructor(dev, host, source, consoleWriter, getCurrentISOTime){
+	constructor(dev, host, source, consoleWriter, getCurrentISOTime, logLevel, local){
 		this.#dev = dev;
 		this.#host = host;
 		this.#source = source;
@@ -63,13 +65,20 @@ export default class Logger{
 		this.#pendingWrites = 0;
 		this.#finishedPendingWritesCallbacks = [];
 		this.#getCurrentISOTime = getCurrentISOTime || (() => new Date().toISOString());
+		this.#logLevel = logLevel || 1;
+		this.#local = !!local;
 	}
 
 	async #log(message, writer, format, level){
+		if(this.#logLevel > level) return;
 		const now = this.#getCurrentISOTime();
 		this.#pendingWrites++;
 		const baseLogData = getBaseLogData(message);
-		(await this.#consoleWriter)[writer].write(applyFormat(format, new Date(now), baseLogData) + nl);
+		if(this.#local){
+			(await this.#consoleWriter)[writer].write(applyFormat(format, new Date(now), baseLogData) + nl);
+			this.#pendingWrites--;
+			return;
+		}
 		const sendObj = Object.assign({
 			source: this.#source,
 			host: this.#host,

@@ -18,6 +18,8 @@ export default class Logger{
 		source: string,
 		consoleDevice: ConsoleDevice | Promise<ConsoleDevice>,
 		getCurrentISOTime?: () => string,
+		logLevel?: number,
+		local?: boolean,
 	)
 
 	finishedPendingWrites(): Promise<void>

@@ -15,4 +15,8 @@ public class Util {
 		return stringJoiner.toString();
 	}
 
+	static void initLog(String msg) {
+		System.out.println(LocalDateTime.now() + ": " + msg);
+	}
+
 }

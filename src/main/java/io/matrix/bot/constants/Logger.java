@@ -3,15 +3,13 @@ package io.matrix.bot.constants;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.matrix.bot.constants.accessor.LogLevelAccessor;
-import io.matrix.bot.constants.model.LogData;
-import io.matrix.bot.constants.model.LoggerConfig;
-import io.matrix.bot.constants.model.MatrixException;
-import io.matrix.bot.constants.model.OutputType;
+import io.matrix.bot.constants.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +20,7 @@ import java.util.function.Function;
 
 import static io.matrix.bot.constants.Errors.getError;
 import static io.matrix.bot.constants.Util.formatStackTraceString;
+import static io.matrix.bot.constants.Util.initLog;
 import static io.matrix.bot.constants.accessor.LogLevelAccessor.*;
 import static io.matrix.bot.constants.accessor.MessageAccessor.*;
 import static java.time.ZoneOffset.UTC;
@@ -43,10 +42,19 @@ public class Logger {
 	private static LoggerConfig loggerConfig;
 	static {
 		try {
+			initLog("Initializing logger");
 			loggerConfig = objectMapper.readValue(new URL(LOG_LEVELS_JSON_URL), new TypeReference<>() {});
 			verifyLoggerConfig(loggerConfig);
+			initLog("Logger initialized");
 		} catch (final Exception e) {
-			printErr(LocalDateTime.now().toString(), "Exception fetching Errors configuration JSON", e);
+			initLog("Exception fetching Errors configuration JSON: " + e);
+			initLog("Reading logger JSON configuration from file");
+			try {
+				loggerConfig = objectMapper.readValue(new File("logger/logger.json"), new TypeReference<>() {});
+				initLog("Logger JSON configuration file successfully read");
+			} catch (Exception e1) {
+				initLog("Exception reading JSON configuration from file" + e1);
+			}
 		}
 	}
 
@@ -62,7 +70,7 @@ public class Logger {
 	// Used queue single-thread handler to print logs sequentially
 	private static final ArrayBlockingQueue<LogParams> queue = new ArrayBlockingQueue<>(100000);
 
-	private Function<String, Void> persistLogFunction;
+	private Function<LogData, Void> persistLogFunction;
 	private String host;
 	private String source;
 	private int logLevel = 2;
@@ -72,7 +80,7 @@ public class Logger {
 
 	}
 
-	private Logger(Function<String, Void> persistLogFunction, String host, String source, String env) {
+	private Logger(Function<LogData, Void> persistLogFunction, String host, String source, String env) {
 		this.persistLogFunction = persistLogFunction;
 		this.host = host;
 		this.source = source;
@@ -83,7 +91,7 @@ public class Logger {
 		return new Logger();
 	}
 
-	public static Logger newLogger(Function<String, Void> persistLogFunction, String host, String source, String env) {
+	public static Logger newLogger(Function<LogData, Void> persistLogFunction, String host, String source, String env) {
 		return new Logger(persistLogFunction, host, source, env);
 	}
 
@@ -187,9 +195,9 @@ public class Logger {
 		try {
 			numberOfActiveAsyncThreads.incrementAndGet();
 			if (params.persistingFunction != null) {
-				final var logData = new LogData(params.source, params.host, params.dateTime.toInstant(UTC).toEpochMilli(),
+				final var logData = new LogData(params.source, params.host, params.dateTime,
 						params.level, getMessage(params.message), getCode(params.message), getStack(params.message), params.env);
-				params.persistingFunction.apply(objectMapper.writeValueAsString(logData));
+				params.persistingFunction.apply(logData);
 			}
 		} catch (final Exception e) {
 			printErr(timeStr, "Exception handling log message", e);
@@ -249,7 +257,7 @@ public class Logger {
 	}
 
 	@SneakyThrows
-	void waitAllThreads() {
+	public void waitAllThreads() {
 		while (numberOfActiveAsyncThreads.get() > 0) {
 			//noinspection BusyWait
 			Thread.sleep(1000);
@@ -272,7 +280,7 @@ public class Logger {
 		private final LocalDateTime dateTime;
 		private final int level;
 		private final Object message;
-		private final Function<String, Void> persistingFunction;
+		private final Function<LogData, Void> persistingFunction;
 		public final String host;
 		public final String source;
 		public final String env;

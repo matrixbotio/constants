@@ -16,6 +16,9 @@ BALANCE:
   NOT_ENOUGH:
     - -33010
     - Not enough balance
+  NOT_ENOUGH_FEE:
+    - -33020
+    - Not enough balance to pay fees
 
 BOT:
   INACTIVE:

@@ -26,7 +26,7 @@ Integer
     = _ [1-9][0-9]* { return parseInt(text(), 10) }
 
 Float
-    = _ [0-9]+ ("."[0-9]+)? { return parseFloat(text()) }
+    = _  "-"?[0-9]+ ("."[0-9]+)? { return parseFloat(text()) }
 
 Interval
     = "1m"

@@ -23,10 +23,10 @@ _ "whitespace"
     = [ \t\n\r]*
 
 Integer
-    = _ [1-9][0-9]* { return parseInt(text(), 10) }
+    = _ "-"? [0-9]+ { return parseInt(text(), 10) }
 
 Float
-    = _ [0-9]+ ("."[0-9]+)? { return parseFloat(text()) }
+    = _ "-"? [0-9]+ ("."[0-9]+)? { return parseFloat(text()) }
 
 Interval
     = "1m"
@@ -134,3 +134,4 @@ Expression
         // if there are relations wrapped into array, unwrap them and add last one, else return only last
         return rn[0] ? [...rn[0].map(([r]) => r), last_relation] : [last_relation];
     }
+

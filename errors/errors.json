@@ -24,6 +24,11 @@
 		"message": "Not enough balance",
 		"name": "BALANCE_NOT_ENOUGH"
 	},
+	"BALANCE_NOT_ENOUGH_FEE": {
+		"code": -33020,
+		"message": "Not enough balance to pay fees",
+		"name": "BALANCE_NOT_ENOUGH_FEE"
+	},
 	"BOT_INACTIVE": {
 		"code": -34300,
 		"message": "Bot is inactive",

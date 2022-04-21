@@ -26,6 +26,7 @@ export const
     BASE_METHOD_OVERLOAD_NOT_FOUND = _(-32602, "BASE_METHOD_OVERLOAD_NOT_FOUND", "Cannot find suitable method overload. Please, check the args you've passed"),
 
     BALANCE_NOT_ENOUGH = _(-33010, "BALANCE_NOT_ENOUGH", "Not enough balance"),
+    BALANCE_NOT_ENOUGH_FEE = _(-33020, "BALANCE_NOT_ENOUGH_FEE", "Not enough balance to pay fees"),
 
     BOT_INACTIVE = _(-34300, "BOT_INACTIVE", "Bot is inactive"),
     BOT_IS_ACTIVE = _(-34200, "BOT_IS_ACTIVE", "Bot is active"),

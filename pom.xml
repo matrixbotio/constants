@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.matrix.bot</groupId>
   <artifactId>constants</artifactId>
-  <version>1.0.86</version>
+  <version>1.0.87</version>
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>

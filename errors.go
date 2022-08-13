@@ -16,6 +16,10 @@ type APIError struct {
 	Stack   string `json:"-"`
 }
 
+func (e APIError) Error() string {
+	return fmt.Sprintf("name: %s; code: %d; message: %s", e.Name, e.Code, e.Message)
+}
+
 func getErrors(url string) map[string]*APIError {
 	storage := make(map[string]*APIError)
 	getJSON(url, &storage)
@@ -49,5 +53,5 @@ func Error(name string, message ...string) *APIError {
 		}
 		return err(res.Code, res.Name, res.Message)
 	}
-	return err(-1, "ERR_UNKNOWN", "Cannot get error named "+name)
+	return err(-1, "ERR_UNKNOWN", "Cannot get error named "+name+"; original message: "+message[0])
 }
